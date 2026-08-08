@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\{Legality, ActivityLog};
+use App\Traits\OptimizesImages;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -10,12 +11,13 @@ use Illuminate\Support\Facades\Storage;
 
 class LegalityManager extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, WithFileUploads, OptimizesImages;
 
     public $search = '';
 
     public $legalityId;
     public $nama_dokumen;
+    public $kategori;
     public $nomor;
     public $tanggal_terbit;
     public $file;
@@ -31,9 +33,10 @@ class LegalityManager extends Component
     {
         return [
             'nama_dokumen'   => 'required|string|max:255',
+            'kategori'       => 'nullable|string|max:255',
             'nomor'          => 'nullable|string|max:255',
             'tanggal_terbit' => 'nullable|date',
-            'file'           => ($this->legalityId ? 'nullable' : 'required') . '|file|mimes:pdf,jpg,jpeg,png|max:4096',
+            'file'           => ($this->legalityId ? 'nullable' : 'required') . '|image|max:4096',
         ];
     }
 
@@ -45,7 +48,11 @@ class LegalityManager extends Component
             ->when($this->search, fn ($q) => $q->where('nama_dokumen', 'like', '%' . $this->search . '%'))
             ->latest()->paginate(10);
 
-        return view('livewire.admin.legality-manager', compact('legalities'))
+        $legalities->withPath(route('admin.legalities'));
+
+        $totalTerverifikasi = Legality::where('status', 'sukses')->count();
+
+        return view('livewire.admin.legality-manager', compact('legalities', 'totalTerverifikasi'))
             ->layout('layouts.admin');
     }
 
@@ -56,6 +63,7 @@ class LegalityManager extends Component
         $legality = Legality::findOrFail($id);
         $this->legalityId     = $legality->id;
         $this->nama_dokumen   = $legality->nama_dokumen;
+        $this->kategori       = $legality->kategori;
         $this->nomor          = $legality->nomor;
         $this->tanggal_terbit = $legality->tanggal_terbit?->format('Y-m-d');
         $this->existingFile   = $legality->file;
@@ -68,12 +76,22 @@ class LegalityManager extends Component
 
         $data = [
             'nama_dokumen'   => $this->nama_dokumen,
+            'kategori'       => $this->kategori,
             'nomor'          => $this->nomor,
             'tanggal_terbit' => $this->tanggal_terbit,
         ];
 
+        // Kalau ada gambar baru yang diupload, coba optimasi & simpan.
+        // Kalau gagal (file corrupt, storage error, dll), dokumen tetap disimpan
+        // tanpa gambar, dan statusnya ditandai "gagal".
         if ($this->file) {
-            $data['file'] = $this->file->store('legalities', 'public');
+            try {
+                $data['file'] = $this->optimizeAndStore($this->file, 'legalities');
+                $data['status'] = 'sukses';
+            } catch (\Throwable $e) {
+                report($e);
+                $data['status'] = 'gagal';
+            }
         }
 
         if ($this->legalityId) {
@@ -100,7 +118,12 @@ class LegalityManager extends Component
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', 'Dokumen legalitas berhasil disimpan.');
+
+        if (($data['status'] ?? null) === 'gagal') {
+            session()->flash('success', 'Dokumen tersimpan, tapi upload gambar gagal. Coba edit dan upload ulang.');
+        } else {
+            session()->flash('success', 'Dokumen legalitas berhasil disimpan.');
+        }
     }
 
     public function confirmDelete($id) { $this->deleteId = $id; $this->showDeleteModal = true; }
@@ -127,7 +150,7 @@ class LegalityManager extends Component
 
     private function resetForm()
     {
-        $this->reset(['legalityId', 'nama_dokumen', 'nomor', 'tanggal_terbit', 'file', 'existingFile']);
+        $this->reset(['legalityId', 'nama_dokumen', 'kategori', 'nomor', 'tanggal_terbit', 'file', 'existingFile']);
         $this->resetErrorBag();
     }
 }
