@@ -31,7 +31,7 @@ Route::post('/checkout', [CheckoutController::class, 'redirectToWhatsapp'])->nam
 
 Route::get('/tentang-kami', [AboutController::class, 'index'])->name('about.index');
 
-// ADMIN — wajib login
+// ADMIN — wajib melakukan login
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', \App\Livewire\Admin\DashboardOverview::class)->name('dashboard');
     Route::get('/artikel', \App\Livewire\Admin\ArticleManager::class)->name('articles');
