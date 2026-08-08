@@ -28,8 +28,6 @@ class TeamManager extends Component
 
     protected $paginationTheme = 'tailwind';
 
-    protected $paginationTheme = 'tailwind';
-
     protected function rules()
     {
         return [
@@ -43,14 +41,10 @@ class TeamManager extends Component
 
     public function render()
     {
-<<<<<<< HEAD
         $members = TeamProfile::where('tim', $this->activeTab)
             ->orderBy('urutan')
             ->paginate(10);
 
-=======
-        $members = TeamProfile::orderBy('tim')->orderBy('urutan')->paginate(10);
->>>>>>> 7c2b0c38c7cbb0458913dc97ac2a87842c5a8228
         $members->withPath(route('admin.team'));
 
         return view('livewire.admin.team-manager', compact('members'))
@@ -148,11 +142,7 @@ class TeamManager extends Component
     private function resetForm()
     {
         $this->reset(['teamId', 'nama', 'jabatan', 'urutan', 'foto', 'existingFoto']);
-<<<<<<< HEAD
         $this->tim = 'BPH';
-=======
-        $this->tim = 'tim1';
->>>>>>> 7c2b0c38c7cbb0458913dc97ac2a87842c5a8228
         $this->resetErrorBag();
     }
 }

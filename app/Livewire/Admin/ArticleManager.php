@@ -39,13 +39,8 @@ class ArticleManager extends Component
             'title'          => 'required|string|max:255',
             'content'        => 'required|string',
             'category'       => 'required|in:produk,berita_acara',
-<<<<<<< HEAD
             'thumbnail'      => 'nullable|image|max:10240',
             'galleryImages.*'=> 'nullable|image|max:10240',
-=======
-            'thumbnail'      => 'nullable|image|max:2048',
-            'galleryImages.*'=> 'nullable|image|max:2048',
->>>>>>> 7c2b0c38c7cbb0458913dc97ac2a87842c5a8228
             'published_at'   => 'nullable|date',
         ];
     }
@@ -104,19 +99,12 @@ class ArticleManager extends Component
             'published_at' => $this->published_at,
         ];
 
-        // Kalau ada thumbnail baru yang diupload, coba optimasi & simpan.
-        // Kalau gagal (file corrupt, storage error, dll), artikel tetap disimpan
-        // tanpa gambar, dan statusnya ditandai "gagal".
         if ($this->thumbnail) {
             try {
                 $data['thumbnail'] = $this->optimizeAndStore($this->thumbnail, 'articles');
                 $data['status'] = 'sukses';
             } catch (\Throwable $e) {
-<<<<<<< HEAD
                 report($e);
-=======
-                report($e); // tetap kecatat di log Laravel buat ditelusuri nanti
->>>>>>> 7c2b0c38c7cbb0458913dc97ac2a87842c5a8228
                 $data['status'] = 'gagal';
             }
         }
