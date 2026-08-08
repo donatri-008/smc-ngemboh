@@ -44,7 +44,4 @@
     .hide-scrollbar::-webkit-scrollbar {
         display: none;
     }
-</style>bar {
-        display: none;
-    }
 </style>

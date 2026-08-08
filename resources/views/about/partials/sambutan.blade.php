@@ -34,8 +34,4 @@
 
 </div>
 @endforeach
-</div>/div>
-
-</div>
-@endforeach
 </div>

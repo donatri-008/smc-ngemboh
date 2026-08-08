@@ -4,11 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin - Smart Maritim Community Ngemboh</title>
-<<<<<<< HEAD
     <link rel="icon" type="image/png" href="{{ asset('assets/logo/utama/Logo SMC.png') }}">
-=======
-    <script>window.__usesLivewireAlpine = true;</script>
->>>>>>> 7c2b0c38c7cbb0458913dc97ac2a87842c5a8228
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
