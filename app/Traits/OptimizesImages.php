@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 trait OptimizesImages
 {
@@ -16,8 +17,8 @@ trait OptimizesImages
      */
     protected function optimizeAndStore(UploadedFile $file, string $folder, int $maxWidth = 1200, int $quality = 75): string
     {
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($file->getRealPath());
+        $manager = ImageManager::usingDriver(Driver::class);
+        $image = $manager->decodeSplFileInfo($file);
 
         if ($image->width() > $maxWidth) {
             $image->scale(width: $maxWidth);
@@ -25,7 +26,9 @@ trait OptimizesImages
 
         $filename = $folder . '/' . Str::random(20) . '.webp';
 
-        Storage::disk('public')->put($filename, (string) $image->toWebp($quality));
+        $encoded = $image->encodeUsingFormat(Format::WEBP, quality: $quality);
+
+        Storage::disk('public')->put($filename, (string) $encoded);
 
         return $filename;
     }
