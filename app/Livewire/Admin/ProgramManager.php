@@ -21,7 +21,7 @@ class ProgramManager extends Component
         return [
             'nama'      => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'icon'      => 'nullable|string|max:100', // nama heroicon, mis. "academic-cap"
+            'icon'      => 'nullable|string|max:100',
         ];
     }
 

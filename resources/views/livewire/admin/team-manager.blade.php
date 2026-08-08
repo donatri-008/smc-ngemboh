@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex gap-3">
-        @foreach(['tim1' => 'Tim 1', 'tim2' => 'Tim 2', 'tim3' => 'Tim 3'] as $key => $label)
+        @foreach(['BPH' => 'BPH', 'Penanggung Jawab' => 'Penanggung Jawab', 'PPK Ormawa' => 'PPK Ormawa'] as $key => $label)
         <button wire:click="setTab('{{ $key }}')"
                 class="px-5 py-2 rounded-xl text-sm font-medium transition
                 {{ $activeTab === $key ? 'bg-neu shadow-neu-in text-indigo-600' : 'bg-neu shadow-neu-out text-gray-500' }}">
@@ -61,11 +61,11 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="text-xs text-gray-500">Tim</label>
+                    <label class="text-xs text-gray-500">Kategori</label>
                     <select wire:model="tim" class="w-full bg-neu shadow-neu-in rounded-xl px-4 py-2 text-sm outline-none">
-                        <option value="tim1">Tim 1</option>
-                        <option value="tim2">Tim 2</option>
-                        <option value="tim3">Tim 3</option>
+                        <option value="BPH">BPH</option>
+                        <option value="Penanggung Jawab">Penanggung Jawab</option>
+                        <option value="PPK Ormawa">PPK Ormawa</option>
                     </select>
                 </div>
                 <div>

@@ -12,7 +12,7 @@ class TeamProfileSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (['tim1', 'tim2', 'tim3'] as $tim) {
+        foreach (['BPH', 'Penanggung Jawab', 'PPK Ormawa'] as $tim) {
             \App\Models\TeamProfile::factory(4)->create(['tim' => $tim]);
         }
     }

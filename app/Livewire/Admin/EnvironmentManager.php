@@ -11,25 +11,23 @@ class EnvironmentManager extends Component
     use WithPagination;
 
     public $search = '';
-    public $filterCategory = '';
 
     public $infoId;
     public $title;
     public $content;
-    public $category = 'informasi';
 
     public $showModal = false;
     public $showDeleteModal = false;
     public $deleteId;
+    public $deleteTitle;
 
     protected $paginationTheme = 'tailwind';
 
     protected function rules()
     {
         return [
-            'title'    => 'required|string|max:255',
-            'content'  => 'required|string',
-            'category' => 'required|in:informasi,peraturan',
+            'title'   => 'required|string|max:255',
+            'content' => 'required|string',
         ];
     }
 
@@ -39,10 +37,11 @@ class EnvironmentManager extends Component
     {
         $infos = EnvironmentInfo::query()
             ->when($this->search, fn ($q) => $q->where('title', 'like', '%' . $this->search . '%'))
-            ->when($this->filterCategory, fn ($q) => $q->where('category', $this->filterCategory))
             ->latest()->paginate(10);
 
-        return view('livewire.admin.environment-manager', compact('infos'))
+        $totalDeskripsi = EnvironmentInfo::count();
+
+        return view('livewire.admin.environment-manager', compact('infos', 'totalDeskripsi'))
             ->layout('layouts.admin');
     }
 
@@ -51,10 +50,9 @@ class EnvironmentManager extends Component
     public function edit($id)
     {
         $info = EnvironmentInfo::findOrFail($id);
-        $this->infoId   = $info->id;
-        $this->title    = $info->title;
-        $this->content  = $info->content;
-        $this->category = $info->category;
+        $this->infoId  = $info->id;
+        $this->title   = $info->title;
+        $this->content = $info->content;
         $this->showModal = true;
     }
 
@@ -65,7 +63,7 @@ class EnvironmentManager extends Component
         $data = [
             'title'    => $this->title,
             'content'  => $this->content,
-            'category' => $this->category,
+            'category' => 'informasi',
         ];
 
         if ($this->infoId) {
@@ -74,23 +72,29 @@ class EnvironmentManager extends Component
 
             ActivityLog::create([
                 'user_id' => auth()->id(), 'action' => 'ubah', 'module' => 'info_lingkungan',
-                'description' => "Mengubah info lingkungan \"{$info->title}\"",
+                'description' => "Mengubah deskripsi lingkungan \"{$info->title}\"",
             ]);
         } else {
             $info = EnvironmentInfo::create($data);
 
             ActivityLog::create([
                 'user_id' => auth()->id(), 'action' => 'tambah', 'module' => 'info_lingkungan',
-                'description' => "Menambahkan info lingkungan baru \"{$info->title}\"",
+                'description' => "Menambahkan deskripsi lingkungan baru \"{$info->title}\"",
             ]);
         }
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', 'Info lingkungan berhasil disimpan.');
+        session()->flash('success', 'Deskripsi lingkungan berhasil disimpan.');
     }
 
-    public function confirmDelete($id) { $this->deleteId = $id; $this->showDeleteModal = true; }
+    public function confirmDelete($id)
+    {
+        $info = EnvironmentInfo::findOrFail($id);
+        $this->deleteId = $id;
+        $this->deleteTitle = $info->title;
+        $this->showDeleteModal = true;
+    }
 
     public function delete()
     {
@@ -100,17 +104,16 @@ class EnvironmentManager extends Component
 
         ActivityLog::create([
             'user_id' => auth()->id(), 'action' => 'hapus', 'module' => 'info_lingkungan',
-            'description' => "Menghapus info lingkungan \"{$title}\"",
+            'description' => "Menghapus deskripsi lingkungan \"{$title}\"",
         ]);
 
         $this->showDeleteModal = false;
-        session()->flash('success', 'Info lingkungan berhasil dihapus.');
+        session()->flash('success', 'Deskripsi lingkungan berhasil dihapus.');
     }
 
     private function resetForm()
     {
-        $this->reset(['infoId', 'title', 'content']);
-        $this->category = 'informasi';
+        $this->reset(['infoId', 'title', 'content', 'deleteId', 'deleteTitle']);
         $this->resetErrorBag();
     }
 }

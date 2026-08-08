@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Statistic;
+use App\Models\DemographicEntry;
 
 class DemographicController extends Controller
 {
     public function index()
     {
-        $stats = Statistic::where('type', 'demografi')
-            ->orderBy('tahun')
-            ->get()
-            ->groupBy('kategori');
+        $summary = DemographicEntry::summary();
+        $anggotaSmcCount = $summary['anggota_smc']['value'] ?? 0;
 
-        return view('demographic.index', compact('stats'));
+        return view('demographic.index', compact('summary', 'anggotaSmcCount'));
     }
 }

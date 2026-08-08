@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleManager extends Component
 {
-    use WithPagination, WithFileUploads;
+    use WithPagination, WithFileUploads, OptimizesImages;
 
     public $search = '';
     public $filterCategory = '';
@@ -23,6 +23,8 @@ class ArticleManager extends Component
     public $category = 'produk';
     public $thumbnail;
     public $existingThumbnail;
+    public $galleryImages = [];
+    public $existingGallery = [];
     public $published_at;
 
     public $showModal = false;
@@ -34,11 +36,12 @@ class ArticleManager extends Component
     protected function rules()
     {
         return [
-            'title'        => 'required|string|max:255',
-            'content'      => 'required|string',
-            'category'     => 'required|in:produk,berita_acara',
-            'thumbnail'    => 'nullable|image|max:2048',
-            'published_at' => 'nullable|date',
+            'title'          => 'required|string|max:255',
+            'content'        => 'required|string',
+            'category'       => 'required|in:produk,berita_acara',
+            'thumbnail'      => 'nullable|image|max:10240',
+            'galleryImages.*'=> 'nullable|image|max:10240',
+            'published_at'   => 'nullable|date',
         ];
     }
 
@@ -50,6 +53,8 @@ class ArticleManager extends Component
             ->when($this->search, fn ($q) => $q->where('title', 'like', '%' . $this->search . '%'))
             ->when($this->filterCategory, fn ($q) => $q->where('category', $this->filterCategory))
             ->latest()->paginate(10);
+
+        $articles->withPath(route('admin.articles'));
 
         return view('livewire.admin.article-manager', compact('articles'))
             ->layout('layouts.admin');
@@ -65,8 +70,21 @@ class ArticleManager extends Component
         $this->content           = $article->content;
         $this->category          = $article->category;
         $this->existingThumbnail = $article->thumbnail;
+        $this->existingGallery   = $article->gallery ?? [];
         $this->published_at      = $article->published_at?->format('Y-m-d');
         $this->showModal = true;
+    }
+
+    public function removeExistingGalleryImage($index)
+    {
+        $path = $this->existingGallery[$index] ?? null;
+
+        if ($path) {
+            Storage::disk('public')->delete($path);
+        }
+
+        unset($this->existingGallery[$index]);
+        $this->existingGallery = array_values($this->existingGallery);
     }
 
     public function save()
@@ -82,14 +100,27 @@ class ArticleManager extends Component
         ];
 
         if ($this->thumbnail) {
-            $data['thumbnail'] = $this->optimizeAndStore($this->thumbnail, 'articles');
+            try {
+                $data['thumbnail'] = $this->optimizeAndStore($this->thumbnail, 'articles');
+                $data['status'] = 'sukses';
+            } catch (\Throwable $e) {
+                report($e);
+                $data['status'] = 'gagal';
+            }
         }
+
+        // Gambar baru yang diupload digabung dengan gambar lama yang masih dipertahankan
+        $newGalleryPaths = collect($this->galleryImages)
+            ->map(fn ($image) => $this->optimizeAndStore($image, 'articles/gallery'))
+            ->all();
+
+        $data['gallery'] = array_values(array_merge($this->existingGallery, $newGalleryPaths));
 
         if ($this->articleId) {
             $article = Article::findOrFail($this->articleId);
-            unset($data['slug']); // slug tetap, biar link lama tidak rusak
+            unset($data['slug']);
 
-            if ($this->thumbnail && $article->thumbnail) {
+            if (isset($data['thumbnail']) && $article->thumbnail) {
                 Storage::disk('public')->delete($article->thumbnail);
             }
 
@@ -110,7 +141,12 @@ class ArticleManager extends Component
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', 'Artikel berhasil disimpan.');
+
+        if (($data['status'] ?? null) === 'gagal') {
+            session()->flash('success', 'Artikel tersimpan, tapi upload gambar gagal. Coba edit artikel ini dan upload ulang gambarnya.');
+        } else {
+            session()->flash('success', 'Artikel berhasil disimpan.');
+        }
     }
 
     public function confirmDelete($id) { $this->deleteId = $id; $this->showDeleteModal = true; }
@@ -122,6 +158,10 @@ class ArticleManager extends Component
 
         if ($article->thumbnail) {
             Storage::disk('public')->delete($article->thumbnail);
+        }
+
+        foreach ($article->gallery ?? [] as $path) {
+            Storage::disk('public')->delete($path);
         }
 
         $article->delete();
@@ -137,7 +177,7 @@ class ArticleManager extends Component
 
     private function resetForm()
     {
-        $this->reset(['articleId', 'title', 'content', 'thumbnail', 'existingThumbnail', 'published_at']);
+        $this->reset(['articleId', 'title', 'content', 'thumbnail', 'existingThumbnail', 'galleryImages', 'existingGallery', 'published_at']);
         $this->category = 'produk';
         $this->resetErrorBag();
     }

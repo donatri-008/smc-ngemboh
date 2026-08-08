@@ -5,19 +5,18 @@ namespace App\Livewire\Admin;
 use App\Models\{TeamProfile, ActivityLog};
 use App\Traits\OptimizesImages;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 
 class TeamManager extends Component
 {
-    use WithFileUploads, OptimizesImages;
-
-    public $activeTab = 'tim1';
+    use WithPagination, WithFileUploads, OptimizesImages;
 
     public $teamId;
     public $nama;
     public $jabatan;
-    public $tim = 'tim1';
+    public $tim = 'BPH';
     public $urutan = 0;
     public $foto;
     public $existingFoto;
@@ -25,31 +24,42 @@ class TeamManager extends Component
     public $showModal = false;
     public $showDeleteModal = false;
     public $deleteId;
+    public $activeTab = 'BPH';
+
+    protected $paginationTheme = 'tailwind';
 
     protected function rules()
     {
         return [
             'nama'    => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
-            'tim'     => 'required|in:tim1,tim2,tim3',
+            'tim'     => 'required|inBPH,Penanggung Jawab,PPK Ormawa',
             'urutan'  => 'nullable|integer|min:0',
             'foto'    => 'nullable|image|max:2048',
         ];
     }
 
-    public function setTab($tab) { $this->activeTab = $tab; }
-
     public function render()
     {
-        $members = TeamProfile::where('tim', $this->activeTab)->orderBy('urutan')->get();
+        $members = TeamProfile::where('tim', $this->activeTab)
+            ->orderBy('urutan')
+            ->paginate(10);
+
+        $members->withPath(route('admin.team'));
+
         return view('livewire.admin.team-manager', compact('members'))
             ->layout('layouts.admin');
+    }
+
+    public function setTab($tab)
+    {
+        $this->activeTab = $tab;
+        $this->resetPage();
     }
 
     public function create()
     {
         $this->resetForm();
-        $this->tim = $this->activeTab;
         $this->showModal = true;
     }
 
@@ -102,7 +112,6 @@ class TeamManager extends Component
             ]);
         }
 
-        $this->activeTab = $data['tim'];
         $this->showModal = false;
         $this->resetForm();
         session()->flash('success', 'Data anggota tim berhasil disimpan.');
@@ -133,6 +142,7 @@ class TeamManager extends Component
     private function resetForm()
     {
         $this->reset(['teamId', 'nama', 'jabatan', 'urutan', 'foto', 'existingFoto']);
+        $this->tim = 'BPH';
         $this->resetErrorBag();
     }
 }

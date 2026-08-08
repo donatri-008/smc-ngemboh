@@ -25,6 +25,12 @@ class DatabaseSeeder extends Seeder
             PartnerSeeder::class,
             EnvironmentInfoSeeder::class,
             AboutContentSeeder::class,
+            VisiMisiSeeder::class,
+            SambutanSeeder::class,
+            HistoryMilestoneSeeder::class,
+            LambangMeaningSeeder::class,
+            ProgramSeeder::class,
+            KontakSeeder::class,
         ]);
     }
 }

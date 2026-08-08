@@ -2,59 +2,39 @@
 @section('title', 'Info Lingkungan - Smart Maritim Community Ngemboh')
 
 @section('content')
-<div class="pt-10 space-y-10">
-    <h1 class="text-2xl font-bold text-gray-700">Info Lingkungan</h1>
-
-    {{-- Info & Peraturan --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @foreach(['informasi' => 'Informasi', 'peraturan' => 'Peraturan'] as $key => $label)
-        <x-ui.card class="space-y-4">
-            <h2 class="font-semibold text-gray-700">{{ $label }}</h2>
-            @forelse($infos->where('category', $key) as $info)
-            <div class="bg-neu rounded-xl shadow-neu-in p-4">
-                <p class="font-medium text-gray-700 text-sm">{{ $info->title }}</p>
-                <p class="text-xs text-gray-500 mt-1">{{ Str::limit(strip_tags($info->content), 120) }}</p>
-            </div>
-            @empty
-            <x-ui.empty-state message="Belum ada data." />
-            @endforelse
-        </x-ui.card>
-        @endforeach
+<div class="bg-blue-50/60">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 text-center space-y-3 sm:space-y-4">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-700">Info Lingkungan</h1>
+        <p class="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">Sajian informasi mengenai info lingkungan berdasarkan data Dinas Lingkungan Hidup kabupaten Gresik</p>
+        @include('partials.data-tab-switcher', ['active' => 'lingkungan'])
     </div>
 
-    {{-- Statistik --}}
-    <div class="space-y-6">
-        <h2 class="text-xl font-bold text-gray-700">Data Statistik Lingkungan</h2>
-        @forelse($stats as $kategori => $items)
-        <x-ui.card>
-            <h3 class="font-semibold text-gray-700 mb-4">{{ $kategori }}</h3>
-            <canvas id="chart-{{ Str::slug($kategori) }}" height="90"></canvas>
-        </x-ui.card>
-        @empty
-        <x-ui.empty-state message="Belum ada data statistik." />
-        @endforelse
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pb-16 space-y-5 sm:space-y-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-blue-700 flex items-center gap-2">
+            <x-heroicon-o-document-text class="w-5 h-5 sm:w-6 sm:h-6" /> Deskripsi Lingkungan
+        </h2>
+
+        @if($infos->isEmpty())
+        <x-ui.empty-state
+            icon="globe-alt"
+            title="Info Lingkungan Belum Tersedia"
+            message="Data deskripsi lingkungan untuk Desa Ngemboh belum ditambahkan oleh admin. Silakan cek kembali beberapa saat lagi." />
+        @else
+        <div class="space-y-3 sm:space-y-4" x-data="{ open: null }">
+            @foreach($infos as $i => $info)
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <button @click="open = open === {{ $i }} ? null : {{ $i }}"
+                        class="w-full flex justify-between items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 bg-green-500/10 text-left">
+                    <span class="font-medium text-blue-700 text-sm sm:text-base">{{ $info->title }}</span>
+                    <x-heroicon-o-chevron-down class="w-4 h-4 shrink-0 text-blue-700 transition" ::class="open === {{ $i }} ? 'rotate-180' : ''" />
+                </button>
+                <div x-show="open === {{ $i }}" x-cloak class="px-4 sm:px-6 py-4 text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                    {{ $info->content }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
     </div>
 </div>
-
-@push('scripts')
-<script>
-@foreach($stats as $kategori => $items)
-new Chart(document.getElementById('chart-{{ Str::slug($kategori) }}'), {
-    type: 'line',
-    data: {
-        labels: @json($items->pluck('label')),
-        datasets: [{
-            label: '{{ $kategori }}',
-            data: @json($items->pluck('value')),
-            borderColor: '#6366f1',
-            backgroundColor: 'rgba(99,102,241,0.15)',
-            tension: 0.4,
-            fill: true,
-        }]
-    },
-    options: { plugins: { legend: { display: false } } }
-});
-@endforeach
-</script>
-@endpush
 @endsection

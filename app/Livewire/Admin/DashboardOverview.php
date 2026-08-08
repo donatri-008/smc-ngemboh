@@ -12,8 +12,6 @@ class DashboardOverview extends Component
     public $totalTeam;
     public $totalLegalities;
     public $recentActivities;
-    public $chartLabels = [];
-    public $chartData = [];
 
     public function mount()
     {
@@ -22,22 +20,21 @@ class DashboardOverview extends Component
         $this->totalTeam       = TeamProfile::count();
         $this->totalLegalities = Legality::count();
 
-        $this->recentActivities = ActivityLog::with('user')->latest()->take(8)->get();
-        $this->buildChartData();
+        $this->recentActivities = ActivityLog::with('user')->latest()->take(6)->get();
     }
 
-    protected function buildChartData()
+    public function activityIcon(string $module): string
     {
-        $data = Article::selectRaw('MONTH(created_at) as bulan, COUNT(*) as total')
-            ->whereBetween('created_at', [now()->subMonths(5)->startOfMonth(), now()->endOfMonth()])
-            ->groupBy('bulan')->pluck('total', 'bulan');
-
-        $bulanIndo = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-        foreach (range(5, 0) as $i) {
-            $bulanKe = now()->subMonths($i)->month;
-            $this->chartLabels[] = $bulanIndo[$bulanKe - 1];
-            $this->chartData[]   = $data[$bulanKe] ?? 0;
-        }
+        return match ($module) {
+            'artikel'          => 'newspaper',
+            'produk'           => 'shopping-cart',
+            'info_lingkungan'  => 'globe-alt',
+            'data_demografis'  => 'chart-bar-square',
+            'legalitas'        => 'shield-check',
+            'profil_tim'       => 'user-group',
+            'mitra'            => 'user-group',
+            default            => 'bell',
+        };
     }
 
     public function render()

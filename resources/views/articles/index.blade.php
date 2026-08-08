@@ -2,28 +2,30 @@
 @section('title', 'Artikel & Berita - Smart Maritim Community Ngemboh')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-6 pt-10 pb-16">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-12 sm:pb-16">
 
     {{-- Header --}}
-    <div class="text-center max-w-2xl mx-auto mb-10">
-        <h1 class="text-5xl font-bold text-brand-blue tracking-tight">Artikel & Berita Terbaru</h1>
-        <p class="text-ink text-base mt-4">
+    <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-blue tracking-tight">
+            Artikel & Berita Terbaru
+        </h1>
+        <p class="text-ink text-sm sm:text-base mt-3 sm:mt-4 px-2">
             Temukan informasi terkini seputar kegiatan komunitas, inovasi maritim, dan perkembangan lingkungan di Desa Ngemboh.
         </p>
     </div>
 
     {{-- Tabs & Search --}}
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
-        <div class="bg-neu shadow-neu-in rounded-full p-2 flex items-center gap-2">
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 sm:mb-10">
+        <div class="bg-neu shadow-neu-in rounded-full p-2 flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar">
             <a href="{{ request()->fullUrlWithQuery(['category' => 'berita_acara']) }}"
-               class="px-6 py-2 rounded-full text-lg font-semibold transition-all duration-300
-                      {{ request('category', 'berita_acara') === 'berita_acara'
+               class="flex-1 md:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
+                      {{ request('category') === 'berita_acara'
                          ? 'bg-neu shadow-neu-out text-brand-green'
                          : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white' }}">
                 Berita Kegiatan
             </a>
             <a href="{{ request()->fullUrlWithQuery(['category' => 'produk']) }}"
-               class="px-6 py-2 rounded-full text-lg font-semibold transition-all duration-300
+               class="flex-1 md:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
                       {{ request('category') === 'produk'
                          ? 'bg-neu shadow-neu-out text-brand-green'
                          : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white' }}">
@@ -33,7 +35,7 @@
 
         {{-- Search --}}
         <form action="{{ route('articles.index') }}" method="GET" class="relative w-full md:w-96" x-data>
-            <input type="hidden" name="category" value="{{ request('category', 'berita_acara') }}">
+            <input type="hidden" name="category" value="{{ request('category') }}">
             <x-heroicon-o-magnifying-glass class="w-5 h-5 text-brand-green absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel atau berita..."
                    x-on:input.debounce.500ms="$el.form.submit()"
@@ -42,7 +44,7 @@
     </div>
 
     {{-- Grid Artikel --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mb-12">
         @forelse($articles as $article)
         <a href="{{ route('articles.show', $article) }}"
         class="group bg-neu rounded-2xl overflow-hidden shadow-neu-lg flex flex-col
@@ -51,33 +53,33 @@
             <div class="relative overflow-hidden">
                 @if($article->thumbnail)
                 <img src="{{ Storage::url($article->thumbnail) }}"
-                    class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110">
+                    class="w-full h-48 sm:h-52 lg:h-56 object-cover transition-transform duration-500 group-hover:scale-110">
                 @else
-                <div class="w-full h-56 bg-neu-alt"></div>
+                <div class="w-full h-48 sm:h-52 lg:h-56 bg-neu-alt"></div>
                 @endif
 
-                <span class="absolute top-3 left-3 bg-brand-green text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
+                <span class="absolute top-3 left-3 bg-brand-green text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
                     {{ $article->category === 'produk' ? 'Artikel' : 'Berita' }}
                 </span>
             </div>
 
-            <div class="p-6 flex flex-col flex-1">
+            <div class="p-5 sm:p-6 flex flex-col flex-1">
                 <div class="flex items-center gap-2 mb-3">
-                    <x-heroicon-o-calendar class="w-4 h-4 text-muted" />
-                    <p class="text-[13px] font-semibold text-ink tracking-wide">
+                    <x-heroicon-o-calendar class="w-4 h-4 text-muted shrink-0" />
+                    <p class="text-[12px] sm:text-[13px] font-semibold text-ink tracking-wide">
                         {{ $article->published_at?->translatedFormat('d M Y') }}
                     </p>
                 </div>
 
-                <h3 class="text-xl font-semibold text-dark leading-snug mb-3 line-clamp-2 transition-colors duration-300 group-hover:text-brand-blue">
+                <h3 class="text-lg sm:text-xl font-semibold text-dark leading-snug mb-3 line-clamp-2 transition-colors duration-300 group-hover:text-brand-blue">
                     {{ $article->title }}
                 </h3>
 
-                <p class="text-base text-ink mb-6 line-clamp-3">
+                <p class="text-sm sm:text-base text-ink mb-6 line-clamp-3">
                     {{ Str::limit(strip_tags($article->content), 110) }}
                 </p>
 
-                <div class="mt-auto text-center bg-brand-green shadow-neu-out rounded-xl py-3 text-lg font-semibold text-white
+                <div class="mt-auto text-center bg-brand-green shadow-neu-out rounded-xl py-2.5 sm:py-3 text-base sm:text-lg font-semibold text-white
                             transition-all duration-300 group-hover:bg-brand-blue">
                     Baca Selengkapnya
                 </div>
@@ -85,11 +87,32 @@
 
         </a>
         @empty
-            <x-ui.empty-state message="Belum ada artikel." />
+            @if(request('search') || request('category'))
+                <x-ui.empty-state
+                    icon="magnifying-glass"
+                    title="Artikel Tidak Ditemukan"
+                    message="Tidak ada artikel yang cocok dengan pencarian atau filter kamu.">
+                    <x-slot:action>
+                        <a href="{{ route('articles.index') }}"
+                           class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-brand-green text-white text-sm font-semibold shadow-neu-out transition-all duration-300 hover:bg-brand-blue">
+                            Reset Pencarian
+                        </a>
+                    </x-slot:action>
+                </x-ui.empty-state>
+            @else
+                <x-ui.empty-state
+                    icon="newspaper"
+                    title="Belum Ada Artikel"
+                    message="Belum ada artikel atau berita yang dipublikasikan saat ini. Silakan cek kembali nanti." />
+            @endif
         @endforelse
     </div>
 
     {{-- Pagination --}}
-    {{ $articles->links('vendor.pagination.neu') }}
+    <div class="pt-2">
+        <div class="overflow-x-auto py-2">
+            {{ $articles->appends(request()->query())->links('vendor.pagination.neu') }}
+        </div>
+    </div>
 </div>
 @endsection

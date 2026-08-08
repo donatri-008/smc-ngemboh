@@ -3,179 +3,187 @@
 
 @section('content')
 
-{{-- Hero --}}
-<section class="px-6 md:px-12 py-16">
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-end">
-        <div class="flex flex-col gap-6">
-            <h1 class="text-5xl font-bold text-brand-blue leading-tight tracking-tight">
-                Membangun Masa Depan Maritim yang Cerdas & Berkelanjutan
-            </h1>
-            <p class="text-ink max-w-md">
-                Komunitas nelayan Ngemboh bertransformasi dengan teknologi dan kolaborasi untuk kesejahteraan bersama. Kami menghadirkan solusi inovatif untuk ekosistem pesisir yang tangguh.
-            </p>
-            <div class="flex items-center gap-4">
-                <a href="{{ route('shop.index') }}"
-                   class="bg-neu shadow-neu-out rounded-3xl px-8 py-3 text-lg font-semibold text-brand-green border-2 border-transparent
-                          transition-all duration-300 ease-out
-                          hover:scale-105 hover:bg-brand-green hover:text-white hover:shadow-neu-in
-                          active:scale-95 active:shadow-neu-in">
-                    Lihat Produk
-                </a>
+<section class="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 bg-cover bg-center"
+         style="background-image: url('{{ asset('assets/bg-beranda.jpg') }}')">
+    <div class="absolute inset-0 bg-black/10"></div>
+
+    <div class="relative z-10 max-w-4xl w-full bg-white/15 backdrop-blur border border-white/40 shadow-xl rounded-3xl sm:rounded-[50px] px-6 sm:px-10 py-8 sm:py-10 text-center">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-brand-navy tracking-tight">Smart Maritim Community</h1>
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-brand-navy mt-2">"Dari Unesa Untuk Maritim Indonesia"</p>
+
+        <p class="text-sm sm:text-base md:text-lg text-black font-medium leading-relaxed mt-4 sm:mt-6 drop-shadow-sm">
+            Desa Ngemboh merupakan salah satu desa pesisir yang berada di Kecamatan Ujungpangkah, Kabupaten Gresik,
+            dengan sebagian besar wilayah berupa kawasan pesisir, tambak, dan perairan laut dangkal yang dimanfaatkan
+            masyarakat sebagai area budidaya dan penangkapan ikan. Kondisi lingkungan perairan yang mendukung,
+            menjadikan desa ini memiliki peluang besar dalam pengembangan komoditas budidaya, khususnya perna viridis.
+        </p>
+    </div>
+</section>
+
+{{-- Artikel & Berita --}}
+<section id="artikel-berita" class="bg-section-blue py-10 sm:py-16 scroll-mt-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
+        <div class="relative mb-8 sm:mb-10">
+            <div class="text-center max-w-2xl mx-auto space-y-3 sm:space-y-0">
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy">Artikel & Berita</h2>
+                <p class="text-ink text-sm sm:text-base mt-2">
+                    Wawasan dan kabar terkini seputar kegiatan komunitas, inovasi maritim, dan perkembangan lingkungan di Desa Ngemboh.
+                </p>
+                {{-- Tombol versi mobile/tablet: tampil di bawah teks --}}
                 <a href="{{ route('articles.index') }}"
-                   class="bg-neu shadow-neu-in rounded-3xl px-8 py-3 text-lg font-semibold text-brand-green opacity-80
-                          transition-all duration-300 ease-out
-                          hover:scale-105 hover:opacity-100 hover:bg-brand-blue hover:text-white
-                          active:scale-95">
-                    Baca Berita
+                   class="md:hidden inline-flex items-center bg-brand-green rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wide text-white
+                          transition-all duration-300 hover:bg-brand-navy">
+                    Lihat Semuanya
                 </a>
             </div>
+            {{-- Tombol versi desktop: absolute di kanan --}}
+            <a href="{{ route('articles.index') }}"
+               class="hidden md:inline-flex absolute right-0 top-1/2 -translate-y-1/2 items-center bg-brand-green rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wide text-white
+                      transition-all duration-300 hover:scale-105 hover:bg-brand-navy">
+                Lihat Semuanya
+            </a>
         </div>
 
-        <div class="bg-neu shadow-neu-out rounded-[40px] p-3 transition-transform duration-500 ease-out hover:scale-[1.015]">
-            {{-- ganti src ini dengan foto komunitas asli, taruh di public/images/ --}}
-            <img src="{{ asset('images/hero-komunitas.jpg') }}" alt="Kolaborasi Komunitas" class="w-full h-[400px] object-cover rounded-[32px]">
-        </div>
-    </div>
-</section>
-
-{{-- Stats --}}
-<section class="bg-neu py-8">
-    <div class="max-w-6xl mx-auto px-6 md:px-12">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            @foreach([
-                ['icon' => 'users', 'value' => $totalMembers . '+', 'label' => 'Anggota Aktif'],
-                ['icon' => 'share', 'value' => $totalPrograms, 'label' => 'Program Pemberdayaan'],
-                ['icon' => 'computer-desktop', 'value' => $totalProducts . '+', 'label' => 'Produk Lokal Unggulan'],
-            ] as $stat)
-            <div class="group bg-neu shadow-neu-in rounded-2xl p-6 flex flex-col items-center cursor-default
-                        transition-all duration-300 ease-out hover:scale-[1.03] hover:bg-brand-green/5">
-                <x-dynamic-component :component="'heroicon-o-' . $stat['icon']" class="w-9 h-9 text-brand-green mb-2 transition-colors duration-300" />
-                <p class="text-3xl font-bold text-brand-green transition-colors duration-300">{{ $stat['value'] }}</p>
-                <p class="text-lg font-semibold text-ink mt-1 transition-colors duration-300 group-hover:text-brand-blue">{{ $stat['label'] }}</p>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- Artikel Terbaru --}}
-<section class="max-w-6xl mx-auto px-6 md:px-12 py-16">
-    <div class="flex items-end justify-between mb-8">
-        <div>
-            <h2 class="text-3xl font-bold text-brand-blue">Artikel & Berita Terbaru</h2>
-            <p class="text-ink text-base mt-1">Wawasan dan kabar terkini dari pesisir Ngemboh.</p>
-        </div>
-        <a href="{{ route('articles.index') }}"
-           class="hidden sm:inline-flex items-center gap-2 bg-brand-green shadow-neu-out rounded-full px-6 py-2 text-base font-bold text-white
-                  transition-all duration-300 ease-out hover:scale-105 hover:bg-brand-blue active:scale-95">
-            Semua Berita <x-heroicon-o-arrow-right class="w-4 h-4" />
-        </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @forelse($latestArticles as $article)
-        <a href="{{ route('articles.show', $article) }}"
-           class="group block bg-neu rounded-2xl overflow-hidden shadow-neu-out
-                  transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-brand-blue/5 active:scale-[0.98] active:shadow-neu-in cursor-pointer">
-            <div class="relative overflow-hidden">
-                @if($article->thumbnail)
-                <img src="{{ Storage::url($article->thumbnail) }}" class="w-full h-44 object-cover transition-transform duration-500 ease-out group-hover:scale-110">
-                @else
-                <div class="w-full h-44 bg-neu-alt"></div>
-                @endif
-                <span class="absolute top-3 left-3 bg-brand-green text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
-                    {{ $article->category === 'produk' ? 'Artikel' : 'Berita' }}
-                </span>
-            </div>
-            <div class="p-5">
-                <p class="text-[13px] font-semibold text-ink tracking-wide">{{ $article->published_at?->translatedFormat('d M Y') }}</p>
-                <p class="font-semibold text-brand-blue text-xl mt-2 line-clamp-2 transition-colors duration-300 group-hover:text-brand-green">{{ $article->title }}</p>
-                <p class="text-base text-ink mt-1 line-clamp-2">{{ Str::limit(strip_tags($article->content), 90) }}</p>
-            </div>
-        </a>
-        @empty
-        <x-ui.empty-state />
-        @endforelse
-    </div>
-</section>
-
-{{-- Produk Unggulan --}}
-<section class="bg-neu-alt py-16">
-    <div class="max-w-6xl mx-auto px-6 md:px-12">
-        <div class="text-center max-w-2xl mx-auto mb-10">
-            <h2 class="text-3xl font-bold text-brand-blue">Produk Unggulan Kami</h2>
-            <p class="text-ink text-base mt-2">Dukung ekonomi lokal dengan membeli produk berkualitas tinggi hasil olahan langsung komunitas kami.</p>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            @forelse($featuredProducts as $product)
-            <div class="group bg-neu shadow-neu-out rounded-2xl p-3
-                        transition-all duration-300 ease-out hover:-translate-y-1 hover:bg-brand-blue/5 active:scale-[0.98]">
-                <a href="{{ route('shop.show', $product) }}" class="block overflow-hidden rounded-2xl">
-                    @if($product->gambar)
-                    <img src="{{ Storage::url($product->gambar) }}" class="w-full h-40 object-cover rounded-2xl bg-white transition-transform duration-500 ease-out group-hover:scale-110">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
+            @forelse($latestArticles as $article)
+            <a href="{{ route('articles.show', $article) }}"
+               class="group flex flex-col bg-neu rounded-2xl overflow-hidden shadow-neu-flat
+                      transition-all duration-300 hover:-translate-y-1">
+                <div class="relative overflow-hidden">
+                    @if($article->thumbnail)
+                    <img src="{{ Storage::url($article->thumbnail) }}" class="w-full h-36 sm:h-44 object-cover transition-transform duration-500 group-hover:scale-110">
                     @else
-                    <div class="w-full h-40 bg-white rounded-2xl"></div>
+                    <div class="w-full h-36 sm:h-44 bg-neu-alt"></div>
                     @endif
-                </a>
-                <div class="px-2 pt-3 space-y-1">
-                    <p class="text-base text-dark truncate transition-colors duration-300 group-hover:text-brand-blue">{{ $product->nama }}</p>
-                    <p class="text-base font-bold text-brand-blue pb-2">Rp{{ number_format($product->harga, 0, ',', '.') }}</p>
-                    <form action="{{ route('cart.add', $product) }}" method="POST">
-                        @csrf
-                        <button class="w-full bg-neu shadow-neu-in rounded-xl py-2 text-sm font-semibold text-brand-green
-                                       transition-all duration-300 ease-out hover:bg-brand-green hover:text-white active:scale-95">
-                            Tambah
-                        </button>
-                    </form>
+                    <span class="absolute top-3 left-3 bg-brand-green text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wide px-2.5 sm:px-3 py-1 rounded-full">
+                        {{ $article->category === 'produk' ? 'Artikel' : 'Berita' }}
+                    </span>
                 </div>
-            </div>
+                <div class="p-4 sm:p-5 flex flex-col flex-1">
+                    <p class="text-xs sm:text-[13px] font-semibold text-ink tracking-wide">{{ $article->published_at?->translatedFormat('d M Y') }}</p>
+                    <p class="font-semibold text-dark text-lg sm:text-xl mt-2 line-clamp-2 transition-colors duration-300 group-hover:text-brand-blue">{{ $article->title }}</p>
+                    <p class="text-sm sm:text-base text-ink mt-1 mb-4 sm:mb-5 line-clamp-2">{{ Str::limit(strip_tags($article->content), 90) }}</p>
+
+                    <div class="mt-auto text-center bg-brand-green shadow-neu-out rounded-xl py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white
+                                transition-all duration-300 group-hover:bg-brand-blue">
+                        Baca Selengkapnya
+                    </div>
+                </div>
+            </a>
             @empty
-            <x-ui.empty-state message="Belum ada produk." />
+            <x-ui.empty-state
+                icon="newspaper"
+                title="Belum Ada Artikel"
+                message="Artikel dan berita terbaru dari komunitas akan tampil di sini." />
             @endforelse
         </div>
     </div>
 </section>
 
-{{-- Program Strategis --}}
-<section class="max-w-6xl mx-auto px-6 md:px-12 py-16">
-    <div class="mb-8">
-        <h2 class="text-3xl font-bold text-brand-blue">Program Strategis Kami</h2>
-        <p class="text-ink text-base mt-1">Inisiatif yang menggerakkan perubahan di komunitas.</p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        @php $mainProgram = $programs->first(); $otherPrograms = $programs->slice(1, 2); @endphp
-
-        @if($mainProgram)
-        <div class="group bg-neu shadow-neu-in rounded-2xl p-10 relative overflow-hidden flex flex-col justify-end min-h-[280px]
-                    transition-all duration-300 ease-out hover:scale-[1.01] hover:bg-brand-blue/5">
-            <x-heroicon-o-rocket-launch class="w-28 h-28 text-dark opacity-10 absolute top-8 right-8" />
-            <h3 class="text-3xl font-bold text-brand-blue relative z-10">{{ $mainProgram->nama }}</h3>
-            <p class="text-base text-ink mt-2 max-w-md relative z-10">{{ $mainProgram->deskripsi }}</p>
-            <a href="{{ route('about.index') }}"
-               class="inline-flex items-center justify-center mt-6 bg-brand-green shadow-neu-out rounded-full px-6 py-3 text-base font-bold text-white w-fit relative z-10
-                      transition-all duration-300 ease-out hover:scale-105 hover:bg-brand-blue active:scale-95">
-                Pelajari
+{{-- Produk Unggulan --}}
+<section id="produk-unggulan"  class="bg-section-blue py-10 sm:py-16 scroll-mt-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
+        <div class="relative mb-8 sm:mb-10">
+            <div class="text-center max-w-2xl mx-auto space-y-3 sm:space-y-0">
+                <h2 class="text-2xl sm:text-3xl font-bold text-brand-navy">Produk Unggulan Kami</h2>
+                <p class="text-ink text-sm sm:text-base mt-2">Dukung ekonomi lokal dengan membeli produk berkualitas tinggi hasil olahan langsung komunitas kami.</p>
+                <a href="{{ route('shop.index') }}"
+                   class="md:hidden inline-flex items-center bg-brand-green rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wide text-white
+                          transition-all duration-300 hover:bg-brand-navy">
+                    Lihat Semuanya
+                </a>
+            </div>
+            <a href="{{ route('shop.index') }}"
+               class="hidden md:inline-flex absolute right-0 top-1/2 -translate-y-1/2 items-center bg-brand-green rounded-full px-5 py-2 text-[11px] font-bold uppercase tracking-wide text-white
+                      transition-all duration-300 hover:scale-105 hover:bg-brand-navy">
+                Lihat Semuanya
             </a>
         </div>
-        @endif
 
-        <div class="grid grid-rows-2 gap-6">
-            @forelse($otherPrograms as $program)
-            <div class="group bg-neu shadow-neu-in rounded-2xl p-6 flex items-center gap-4
-                        transition-all duration-300 ease-out hover:scale-[1.02] hover:bg-brand-blue/5 cursor-default">
-                <div class="w-14 h-14 rounded-2xl bg-brand-green shadow-neu-out flex items-center justify-center shrink-0
-                            transition-colors duration-300 group-hover:bg-brand-blue">
-                    <x-dynamic-component :component="'heroicon-o-' . ($program->icon ?: 'sparkles')" class="w-6 h-6 text-white" />
-                </div>
-                <div>
-                    <p class="font-semibold text-brand-blue text-xl">{{ $program->nama }}</p>
-                    <p class="text-sm text-ink mt-1">{{ $program->deskripsi }}</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            @forelse($featuredProducts as $product)
+            <div class="group bg-neu shadow-neu-flat rounded-2xl p-2.5 sm:p-3 transition-all duration-300 hover:-translate-y-1">
+                <a href="{{ route('shop.show', $product) }}" class="block overflow-hidden rounded-2xl">
+                    @if($product->gambar)
+                    <img src="{{ Storage::url($product->gambar) }}" class="w-full h-28 sm:h-40 object-cover rounded-2xl bg-white transition-transform duration-500 group-hover:scale-110">
+                    @else
+                    <div class="w-full h-28 sm:h-40 bg-white rounded-2xl"></div>
+                    @endif
+                </a>
+                <div class="px-1.5 sm:px-2 pt-2.5 sm:pt-3 space-y-1">
+                    <p class="text-sm sm:text-base text-dark truncate">{{ $product->nama }}</p>
+                    <p class="text-sm sm:text-base font-bold text-brand-blue pb-1.5 sm:pb-2">Rp{{ number_format($product->harga, 0, ',', '.') }}</p>
+                    <form
+                        x-data="{ loading: false }"
+                        x-on:submit.prevent="
+                            const tokenEl = document.querySelector('meta[name=csrf-token]');
+                            if (! tokenEl) {
+                                window.showToast('error', 'CSRF token tidak ditemukan. Muat ulang halaman.');
+                                return;
+                            }
+                            loading = true;
+                            fetch($el.action, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': tokenEl.content,
+                                    'Accept': 'application/json',
+                                },
+                                body: new FormData($el),
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                loading = false;
+                                window.showToast(data.success ? 'success' : 'error', data.message);
+                                if (data.success) {
+                                    window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
+                                }
+                            })
+                            .catch(() => {
+                                loading = false;
+                                window.showToast('error', 'Gagal menambahkan produk ke keranjang.');
+                            });
+                        "
+                        action="{{ route('cart.add', $product) }}" method="POST">
+                        @csrf
+                        <button type="submit" :disabled="loading"
+                                class="w-full bg-neu shadow-neu-in rounded-xl py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-brand-green
+                                       transition-all duration-300 hover:bg-brand-green hover:text-white active:scale-95 disabled:opacity-60">
+                            <span x-show="!loading">Tambah</span>
+                            <span x-show="loading" x-cloak>Memproses...</span>
+                        </button>
+                    </form>
                 </div>
             </div>
             @empty
-            <x-ui.empty-state message="Belum ada program lain." />
+            <x-ui.empty-state
+                icon="shopping-bag"
+                title="Belum Ada Produk"
+                message="Produk unggulan dari komunitas akan segera hadir." />
+            @endforelse
+        </div>
+    </div>
+</section>
+
+{{-- Program SMC --}}
+<section id="program-smc" class="bg-section-blue py-10 sm:py-16 scroll-mt-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 md:px-12">
+        <div class="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-brand-navy uppercase">Program SMC</h2>
+            <p class="text-ink text-xs sm:text-sm md:text-base mt-2">Inisiatif yang menggerakkan perubahan di komunitas Desa Ngemboh.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+            @forelse($programs->take(4) as $program)
+            <a href="{{ route('program.show', $program) }}?from=home"
+               class="group block bg-neu shadow-neu-in rounded-2xl p-5 sm:p-6 md:p-8 transition-all duration-300 hover:scale-[1.01] hover:shadow-neu-out">
+                <h3 class="text-base sm:text-lg md:text-xl font-bold text-brand-green transition-colors duration-300 group-hover:text-brand-blue">{{ $program->nama }}</h3>
+                <p class="text-xs sm:text-sm md:text-base text-ink mt-2 leading-relaxed">{{ $program->deskripsi }}</p>
+            </a>
+            @empty
+            <x-ui.empty-state
+                icon="sparkles"
+                title="Belum Ada Program"
+                message="Program pemberdayaan komunitas akan ditampilkan di sini." />
             @endforelse
         </div>
     </div>

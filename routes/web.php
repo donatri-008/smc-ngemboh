@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{HomeController, ArticleController, EnvironmentController,
-    DemographicController, ShopController, CheckoutController, AboutController};
+    DemographicController, ShopController, CheckoutController, AboutController, ProgramController};
 
 // PUBLIK — tanpa login
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -10,6 +10,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::controller(ArticleController::class)->prefix('artikel')->group(function () {
     Route::get('/', 'index')->name('articles.index');
     Route::get('/{article}', 'show')->name('articles.show');
+});
+
+Route::controller(ProgramController::class)->prefix('program')->group(function () {
+    Route::get('/{program}', 'show')->name('program.show');
 });
 
 Route::get('/info-lingkungan', [EnvironmentController::class, 'index'])->name('environment.index');
@@ -32,6 +36,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/dashboard', \App\Livewire\Admin\DashboardOverview::class)->name('dashboard');
     Route::get('/artikel', \App\Livewire\Admin\ArticleManager::class)->name('articles');
     Route::get('/belanja', \App\Livewire\Admin\ProductManager::class)->name('products');
+    Route::get('/demografi-nelayan', \App\Livewire\Admin\DemographicManager::class)->name('demographics');
     Route::get('/info-lingkungan', \App\Livewire\Admin\EnvironmentManager::class)->name('environment');
     Route::get('/statistik', \App\Livewire\Admin\StatisticManager::class)->name('statistics');
     Route::get('/legalitas', \App\Livewire\Admin\LegalityManager::class)->name('legalities');

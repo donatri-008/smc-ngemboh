@@ -11,7 +11,7 @@ class HomeController extends Controller
         $latestArticles = Article::latest()->take(3)->get();
         $featuredProducts = Product::latest()->take(4)->get();
         $sambutan = AboutContent::where('section', 'sambutan')->first();
-        $programs = Program::take(3)->get();
+        $programs = Program::take(4)->get();
 
         $totalMembers = TeamProfile::count();
         $totalPrograms = Program::count();

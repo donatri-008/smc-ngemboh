@@ -12,13 +12,14 @@ class ShopController extends Controller
         $products = Product::query()
             ->when($request->kategori, fn ($q) => $q->where('kategori', $request->kategori))
             ->when($request->search, fn ($q) => $q->where('nama', 'like', '%' . $request->search . '%'))
-            ->latest()->paginate(12);
+            ->latest()->paginate(8);
 
         return view('shop.index', compact('products'));
     }
 
     public function show(Product $product)
     {
+        $product->load('images');
         return view('shop.show', compact('product'));
     }
 
@@ -27,29 +28,42 @@ class ShopController extends Controller
         $cart = session()->get('cart', []);
         $qty = max(1, (int) $request->input('qty', 1));
 
-        // total qty yang diminta = qty baru + qty yang sudah ada di cart
         $qtySudahDiCart = $cart[$product->id]['qty'] ?? 0;
         $totalDiminta = $qtySudahDiCart + $qty;
 
         if ($totalDiminta > $product->stok) {
             $sisaBisaDitambah = max(0, $product->stok - $qtySudahDiCart);
+            $message = $sisaBisaDitambah > 0
+                ? "Stok \"{$product->nama}\" tidak cukup. Sisa stok yang bisa ditambahkan: {$sisaBisaDitambah}."
+                : "Stok \"{$product->nama}\" sudah habis atau sudah mencapai batas di keranjang.";
 
-            return redirect()->back()->with(
-                'error',
-                $sisaBisaDitambah > 0
-                    ? "Stok \"{$product->nama}\" tidak cukup. Sisa stok yang bisa ditambahkan: {$sisaBisaDitambah}."
-                    : "Stok \"{$product->nama}\" sudah habis atau sudah mencapai batas di keranjang."
-            );
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
+            return redirect()->back()->with('error', $message);
         }
 
         if (isset($cart[$product->id])) {
             $cart[$product->id]['qty'] = $totalDiminta;
         } else {
-            $cart[$product->id] = ['nama' => $product->nama, 'harga' => $product->harga, 'qty' => $qty];
+            $cart[$product->id] = ['nama' => $product->nama, 'harga' => $product->harga, 'qty' => $qty, 'gambar' => $product->gambar,];
         }
 
         session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang');
+
+        $message = 'Produk ditambahkan ke keranjang';
+        $cartCount = collect($cart)->sum('qty');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'cart_count' => $cartCount,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     public function cart()
@@ -64,8 +78,13 @@ class ShopController extends Controller
         $qty = max(1, (int) $request->input('qty', 1));
 
         if ($qty > $product->stok) {
-            return redirect()->route('cart.index')
-                ->with('error', "Jumlah melebihi stok tersedia ({$product->stok}) untuk \"{$product->nama}\".");
+            $message = "Jumlah melebihi stok tersedia ({$product->stok}) untuk \"{$product->nama}\".";
+
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
+            return redirect()->route('cart.index')->with('error', $message);
         }
 
         if (isset($cart[$product->id])) {
@@ -73,14 +92,34 @@ class ShopController extends Controller
             session()->put('cart', $cart);
         }
 
+        $cartCount = collect($cart)->sum('qty');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Jumlah produk diperbarui.',
+                'cart_count' => $cartCount,
+            ]);
+        }
+
         return redirect()->route('cart.index')->with('success', 'Jumlah produk diperbarui.');
     }
 
-    public function removeFromCart(Product $product)
+    public function removeFromCart(Product $product, Request $request)
     {
         $cart = session()->get('cart', []);
         unset($cart[$product->id]);
         session()->put('cart', $cart);
+
+        $cartCount = collect($cart)->sum('qty');
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk dihapus dari keranjang.',
+                'cart_count' => $cartCount,
+            ]);
+        }
 
         return redirect()->route('cart.index')->with('success', 'Produk dihapus dari keranjang.');
     }

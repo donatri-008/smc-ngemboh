@@ -2,29 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 class CheckoutController extends Controller
 {
-    public function redirectToWhatsapp()
+    public function redirectToWhatsapp(Request $request)
     {
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Keranjang masih kosong.');
+            $message = 'Keranjang masih kosong.';
+
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+            return redirect()->route('cart.index')->with('error', $message);
         }
 
-        $nomorWA = '6281357340696';
+        $request->validate([
+            'nama'   => 'required|string|max:255',
+            'alamat' => 'required|string|max:500',
+        ]);
 
-        $pesan = "Halo Smart Maritim Community Ngemboh, saya ingin memesan produk berikut:%0a%0a";
-        $total = 0;
+        try {
+            DB::transaction(function () use ($cart) {
+                foreach ($cart as $productId => $item) {
+                    // lockForUpdate() mengunci baris produk ini sampai transaksi selesai,
+                    // supaya checkout lain yang barengan tidak baca stok "lama" (mencegah race condition/overselling)
+                    $product = Product::where('id', $productId)->lockForUpdate()->first();
 
-        foreach ($cart as $item) {
-            $subtotal = $item['harga'] * $item['qty'];
-            $total += $subtotal;
-            $pesan .= "- {$item['nama']} x{$item['qty']} = Rp" . number_format($subtotal, 0, ',', '.') . "%0a";
+                    if (! $product || $product->stok < $item['qty']) {
+                        throw new \RuntimeException(
+                            "Stok \"{$item['nama']}\" tidak lagi mencukupi (tersisa " . ($product->stok ?? 0) . "). Silakan sesuaikan jumlah di keranjang."
+                        );
+                    }
+
+                    $product->decrement('stok', $item['qty']);
+                }
+            });
+        } catch (\RuntimeException $e) {
+            if ($request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            }
+            return redirect()->route('cart.index')->with('error', $e->getMessage());
         }
-        $pesan .= "%0aTotal: Rp" . number_format($total, 0, ',', '.');
 
         session()->forget('cart');
-        return redirect("https://wa.me/{$nomorWA}?text={$pesan}");
+
+        $message = 'Pesanan berhasil diproses. Selesaikan pemesanan lewat WhatsApp.';
+
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => $message]);
+        }
+
+        return redirect()->route('shop.index')->with('success', $message);
     }
 }

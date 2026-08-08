@@ -1,52 +1,360 @@
 @extends('layouts.app')
 @section('title', 'Keranjang - Smart Maritim Community Ngemboh')
 
-@section('content')
-<div class="pt-10 space-y-6">
-    <h1 class="text-2xl font-bold text-gray-700">Keranjang Belanja</h1>
+@php
+    $cartItems = collect($cart)->map(function ($item, $id) {
+        return [
+            'id'     => $id,
+            'nama'   => $item['nama'],
+            'harga'  => (float) $item['harga'],
+            'qty'    => (int) $item['qty'],
+            'gambar' => !empty($item['gambar']) ? Storage::url($item['gambar']) : null,
+        ];
+    })->values();
 
-    @if(count($cart) === 0)
-    <x-ui.empty-state message="Keranjang masih kosong." />
-    <a href="{{ route('shop.index') }}" class="inline-block text-sm text-indigo-500 hover:underline">&larr; Lanjut belanja</a>
-    @else
-    <x-ui.card padding="p-4" class="divide-y divide-gray-200/60">
-        @php $total = 0; @endphp
-        @foreach($cart as $productId => $item)
-        @php $subtotal = $item['harga'] * $item['qty']; $total += $subtotal; @endphp
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-4">
-            <div>
-                <p class="font-medium text-gray-700">{{ $item['nama'] }}</p>
-                <p class="text-xs text-gray-500">Rp{{ number_format($item['harga'], 0, ',', '.') }} x {{ $item['qty'] }}</p>
+    $updateUrlTemplate = route('cart.update', ['product' => '__ID__']);
+    $removeUrlTemplate = route('cart.remove', ['product' => '__ID__']);
+@endphp
+
+@section('content')
+<div
+    class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-16 space-y-6 sm:space-y-8"
+    x-data="{
+        items: @js($cartItems),
+        timers: {},
+        showCheckout: {{ $errors->any() ? 'true' : 'false' }},
+        confirmRemoveId: null,
+        nama: @js(old('nama', '')),
+        alamat: @js(old('alamat', '')),
+
+        updateUrl(id) { return @js($updateUrlTemplate).replace('__ID__', id); },
+        removeUrl(id) { return @js($removeUrlTemplate).replace('__ID__', id); },
+
+        get subtotal() {
+            return this.items.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+        },
+        get total() { return this.subtotal; },
+
+        formatRp(value) {
+            return 'Rp ' + Math.round(value).toLocaleString('id-ID');
+        },
+
+        buildWaMessage() {
+            let msg = `Hii... admin Smart Maritim Community Ngemboh saya ingin memesan produk berikut: \n\n`;
+            msg += `Nama: ${this.nama}\n`;
+            msg += `Alamat Pengiriman: ${this.alamat}\n`;
+            msg += `Nama Barang:\n`;
+            this.items.forEach((item, i) => {
+                msg += `${i + 1}. ${item.nama} x ${item.qty} : ${this.formatRp(item.harga * item.qty)}\n`;
+            });
+            msg += `Total Harga: ${this.formatRp(this.total)}`;
+            return msg;
+        },
+
+        changeQty(item, delta) {
+            const newQty = item.qty + delta;
+            if (newQty < 1) return;
+
+            const oldQty = item.qty;
+            item.qty = newQty;
+
+            clearTimeout(this.timers[item.id]);
+            this.timers[item.id] = setTimeout(() => {
+                const tokenEl = document.querySelector('meta[name=csrf-token]');
+                fetch(this.updateUrl(item.id), {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': tokenEl.content,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({ qty: item.qty }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        item.qty = oldQty;
+                        window.showToast('error', data.message);
+                    } else {
+                        window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
+                    }
+                })
+                .catch(() => {
+                    item.qty = oldQty;
+                    window.showToast('error', 'Gagal memperbarui jumlah produk.');
+                });
+            }, 400);
+        },
+
+        removeItem(id) {
+            const tokenEl = document.querySelector('meta[name=csrf-token]');
+            fetch(this.removeUrl(id), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': tokenEl.content,
+                    'Accept': 'application/json',
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.items = this.items.filter(i => i.id !== id);
+                window.showToast('success', data.message ?? 'Produk dihapus dari keranjang.');
+                window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: data.cart_count } }));
+            })
+            .catch(() => window.showToast('error', 'Gagal menghapus produk.'));
+        },
+
+        openWhatsApp() {
+            const waNumber = '6281357340696';
+            const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(this.buildWaMessage())}`;
+            window.open(url, '_blank');
+        },
+
+        submitCheckout(formEl) {
+            this.openWhatsApp();
+
+            const tokenEl = document.querySelector('meta[name=csrf-token]');
+            fetch(formEl.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': tokenEl.content,
+                    'Accept': 'application/json',
+                },
+                body: new FormData(formEl),
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    this.items = [];
+                    window.dispatchEvent(new CustomEvent('cart-updated', { detail: { count: 0 } }));
+                }
+            })
+            .catch(() => {});
+
+            this.showCheckout = false;
+        },
+    }"
+>
+    <div>
+        <h1 class="text-2xl sm:text-[32px] sm:leading-10 font-bold text-[#2655B6]">Keranjang Belanja</h1>
+        <p class="text-sm sm:text-base text-[#40484B] mt-1 sm:mt-2">Dukung komunitas lokal dengan setiap pembelian produk ramah lingkungan.</p>
+    </div>
+
+    {{-- Empty State --}}
+    <template x-if="items.length === 0">
+        <div class="flex flex-col items-center justify-center text-center bg-[#F6F9FF] rounded-2xl py-14 sm:py-20 px-6">
+            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#F6F9FF] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center mb-6">
+                <x-heroicon-o-shopping-cart class="w-8 h-8 sm:w-10 sm:h-10 text-[#4CC71C]" />
+            </div>
+ 
+            <h2 class="text-xl sm:text-2xl font-bold text-[#171C21]">Keranjang Belanja Kosong</h2>
+            <p class="text-sm sm:text-base text-[#40484B] mt-2 max-w-sm">
+                Sepertinya Anda belum menambahkan produk apapun. Yuk, jelajahi katalog dan dukung produk lokal Desa Ngemboh.
+            </p>
+ 
+            <a href="{{ route('shop.index') }}"
+               class="inline-flex items-center gap-3 bg-[#4CC71C] rounded-full px-6 sm:px-8 py-2.5 sm:py-3 mt-8 text-white font-semibold text-sm sm:text-base shadow-[0px_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#3DA617] transition">
+                <x-heroicon-o-arrow-left class="w-4 h-4 sm:w-5 sm:h-5" />
+                Kembali ke Katalog Belanja
+            </a>
+        </div>
+    </template>
+
+    <template x-if="items.length > 0">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6 items-start">
+
+            {{-- Daftar Produk --}}
+            <div class="space-y-4 sm:space-y-6 min-w-0">
+                <template x-for="item in items" :key="item.id">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-4 sm:p-6 bg-[#F6F9FF] rounded-xl shadow-[6px_6px_12px_#BABECC] min-w-0">
+
+                        {{-- Baris atas di mobile: gambar + nama/harga + hapus. Jadi 1 baris utuh di sm+ --}}
+                        <div class="flex items-center gap-3 sm:gap-6 sm:contents">
+                            <div class="w-16 h-16 sm:w-32 sm:h-32 shrink-0 flex items-center justify-center p-1.5 sm:p-2 bg-[#F6F9FF] rounded-lg shadow-[inset_-6px_-6px_12px_#FFFFFF,inset_6px_6px_12px_#BABECC]">
+                                <img :src="item.gambar" x-show="item.gambar" class="w-full h-full object-cover rounded-md">
+                                <div x-show="!item.gambar" class="w-full h-full rounded-md bg-white"></div>
+                            </div>
+
+                            <div class="flex-1 min-w-0 space-y-0.5 sm:space-y-1">
+                                <p class="text-base sm:text-xl font-semibold text-[#171C21] truncate" x-text="item.nama"></p>
+                                <p class="text-sm sm:text-base font-bold text-[#2655B6]" x-text="formatRp(item.harga)"></p>
+                            </div>
+
+                            <button type="button" @click="confirmRemoveId = item.id"
+                                    class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-[#BA1A1A] hover:bg-red-50 transition shrink-0 sm:order-last">
+                                <x-heroicon-o-trash class="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between sm:contents">
+                            <div class="flex items-center gap-2 p-1 bg-[#F6F9FF] rounded-full shadow-[inset_-6px_-6px_12px_#FFFFFF,inset_6px_6px_12px_#BABECC] shrink-0">
+                                <button type="button" @click="changeQty(item, -1)"
+                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
+                                    <span class="block w-3.5 h-0.5 bg-white"></span>
+                                </button>
+                                <span class="w-8 text-center text-base font-bold text-[#171C21]" x-text="item.qty"></span>
+                                <button type="button" @click="changeQty(item, 1)"
+                                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
+                                    <x-heroicon-o-plus class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+
+                            <div class="text-right space-y-0.5 sm:space-y-1 shrink-0 sm:w-32">
+                                <p class="text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-[#40484B]">Subtotal</p>
+                                <p class="text-lg sm:text-xl font-semibold text-[#2655B6]" x-text="formatRp(item.harga * item.qty)"></p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
 
-            <div class="flex items-center gap-3">
-                <form action="{{ route('cart.update', $productId) }}" method="POST" class="flex items-center gap-2">
-                    @csrf @method('PATCH')
-                    <input type="number" name="qty" value="{{ $item['qty'] }}" min="1"
-                        class="w-16 bg-neu shadow-neu-in rounded-xl px-3 py-1 text-sm outline-none">
-                    <button class="text-xs text-indigo-500 hover:underline">Update</button>
-                </form>
+            {{-- Ringkasan Pesanan --}}
+            <div class="min-w-0 self-stretch">
+                <div class="bg-[#F6F9FF] rounded-2xl shadow-[6px_6px_12px_#BABECC] p-5 sm:p-8 space-y-4 lg:sticky lg:top-24">
+                    <h2 class="text-xl sm:text-2xl font-bold text-[#171C21]">Ringkasan Pesanan</h2>
 
-                <form action="{{ route('cart.remove', $productId) }}" method="POST">
-                    @csrf @method('DELETE')
-                    <button class="text-xs text-red-500 hover:underline">Hapus</button>
-                </form>
+                    <div class="space-y-3 py-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm sm:text-base text-[#40484B]">Subtotal Produk</span>
+                            <span class="text-sm sm:text-base font-semibold text-[#171C21]" x-text="formatRp(subtotal)"></span>
+                        </div>
+                    </div>
 
-                <p class="text-sm font-semibold text-gray-700 w-28 text-right">Rp{{ number_format($subtotal, 0, ',', '.') }}</p>
+                    <div class="flex items-center justify-between pt-4 border-t border-[#BFC8CB]/30">
+                        <span class="text-lg sm:text-xl font-semibold text-[#171C21]">Total</span>
+                        <span class="text-2xl sm:text-[32px] font-bold text-[#2655B6]" x-text="formatRp(total)"></span>
+                    </div>
+
+                    <button type="button" @click="showCheckout = true"
+                            class="w-full flex items-center justify-center gap-3 bg-[#4CC71C] rounded-xl py-3.5 sm:py-4 text-white font-bold text-base sm:text-lg shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] hover:bg-[#3DA617] transition">
+                        <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
+                        Checkout via WhatsApp
+                    </button>
+
+                    <p class="text-center text-xs italic font-semibold tracking-wide text-[#40484B]">
+                        Pesanan Anda akan langsung diproses oleh tim Community Ngemboh.
+                    </p>
+                </div>
+            </div>
+
+            <a href="{{ route('shop.index') }}"
+               class="w-fit inline-flex items-center gap-3 bg-[#4CC71C] rounded-full px-6 sm:px-8 py-2.5 sm:py-3 text-white font-semibold text-sm sm:text-base shadow-[0px_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#3DA617] transition">
+                <x-heroicon-o-arrow-left class="w-4 h-4 sm:w-5 sm:h-5" />
+                Kembali ke Katalog Belanja
+            </a>
+        </div>
+    </template>
+
+    {{-- Modal Konfirmasi Checkout --}}
+    <template x-teleport="body">
+    <div x-show="showCheckout" x-cloak
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+         x-transition.opacity>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="showCheckout = false"></div>
+
+        <div class="relative bg-white rounded-2xl sm:rounded-3xl w-full max-w-md max-h-[90vh] sm:max-h-[85vh] flex flex-col overflow-hidden">
+
+            {{-- Header --}}
+            <div class="flex items-center justify-between px-5 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 shrink-0 border-b border-[#BFC8CB]/20">
+                <h2 class="text-xl sm:text-2xl font-bold text-[#2655B6]">Ringkasan Pesanan</h2>
+                <button type="button" @click="showCheckout = false" class="text-gray-400 hover:text-gray-600">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+
+            <form action="{{ route('checkout') }}" method="POST" @submit.prevent="submitCheckout($el)" class="flex-1 flex flex-col min-h-0">
+                @csrf
+                <div class="flex-1 overflow-y-auto px-5 sm:px-6 py-4 space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wide text-[#40484B] mb-2">Nama Pemesan</label>
+                        <input type="text" name="nama" x-model="nama" required
+                               class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
+                        @error('nama') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wide text-[#40484B] mb-2">Alamat Pemesan</label>
+                        <input type="text" name="alamat" x-model="alamat" required
+                               class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
+                        @error('alamat') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="space-y-2">
+                        <template x-for="item in items" :key="item.id">
+                            <div class="flex items-center justify-between gap-4 p-3 bg-[#F6F9FF] rounded-xl shadow-[inset_-6px_-6px_12px_#FFFFFF,inset_6px_6px_12px_#BABECC]">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 rounded-lg bg-[#E9EEF5] overflow-hidden shrink-0">
+                                        <img :src="item.gambar" x-show="item.gambar" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-bold text-[#171C21] truncate" x-text="item.nama"></p>
+                                        <p class="text-xs font-semibold tracking-wide text-[#40484B]" x-text="'Qty: ' + item.qty"></p>
+                                    </div>
+                                </div>
+                                <p class="text-sm font-bold text-[#2655B6] whitespace-nowrap" x-text="formatRp(item.harga * item.qty)"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="shrink-0 border-t border-[#BFC8CB]/30 px-5 sm:px-6 py-4 space-y-3 bg-white">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-[#40484B]">Subtotal</span>
+                        <span class="text-sm font-medium text-[#171C21]" x-text="formatRp(subtotal)"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 border-t border-[#BFC8CB]/30">
+                        <span class="text-base sm:text-lg font-bold text-[#171C21]">Total Pembayaran</span>
+                        <span class="text-xl sm:text-2xl font-bold text-[#2655B6]" x-text="formatRp(total)"></span>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full flex items-center justify-center gap-3 bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] rounded-2xl py-3 text-white font-bold text-sm sm:text-base hover:bg-[#3DA617] transition">
+                        <x-heroicon-o-chat-bubble-left-right class="w-5 h-5" />
+                        Konfirmasi & Lanjut ke WhatsApp
+                    </button>
+
+                    <button type="button" @click="showCheckout = false"
+                            class="w-full py-1 text-sm font-medium text-[#40484B] hover:underline">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </template>
+    {{-- Modal Konfirmasi Hapus Produk --}}
+    <template x-teleport="body">
+    <div x-show="confirmRemoveId !== null" x-cloak
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+         x-transition.opacity>
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="confirmRemoveId = null"></div>
+
+        <div class="relative bg-white rounded-xl w-full max-w-[448px] p-6 sm:p-8 flex flex-col items-center text-center">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#F6F9FF] shadow-[inset_-6px_-6px_12px_#FFFFFF,inset_6px_6px_12px_#BABECC] flex items-center justify-center mb-5 sm:mb-6">
+                <x-heroicon-o-trash class="w-5 h-5 sm:w-6 sm:h-6 text-[#BA1A1A]" />
+            </div>
+
+            <h2 class="text-2xl sm:text-[32px] sm:leading-10 font-bold text-[#2655B6]">Hapus produk ini dari keranjang?</h2>
+
+            <p class="text-sm sm:text-base text-[#40484B] mt-3 sm:mt-4">
+                Tindakan ini tidak dapat dibatalkan. Produk akan dihapus secara permanen dari daftar belanja Anda.
+            </p>
+
+            <div class="flex items-center gap-3 sm:gap-4 w-full mt-6 sm:mt-8">
+                <button type="button" @click="confirmRemoveId = null"
+                        class="flex-1 flex items-center justify-center py-2.5 sm:py-3 bg-[#F6F9FF] shadow-[-4px_-4px_10px_#FFFFFF,4px_4px_10px_#BABECC] rounded-lg text-sm font-semibold text-[#4CC71C] transition active:scale-95">
+                    Batal
+                </button>
+                <button type="button"
+                        @click="removeItem(confirmRemoveId); confirmRemoveId = null"
+                        class="flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 bg-[#FF383C] shadow-[-4px_-4px_10px_rgba(255,255,255,0.2),4px_4px_10px_rgba(0,0,0,0.2)] rounded-lg text-sm font-semibold text-white transition active:scale-95">
+                    <x-heroicon-o-trash class="w-4 h-4" />
+                    Hapus
+                </button>
             </div>
         </div>
-        @endforeach
-    </x-ui.card>
-
-    <x-ui.card class="flex items-center justify-between">
-        <p class="font-semibold text-gray-700">Total</p>
-        <p class="text-xl font-bold text-indigo-600">Rp{{ number_format($total, 0, ',', '.') }}</p>
-    </x-ui.card>
-
-    <form action="{{ route('checkout') }}" method="POST">
-        @csrf
-        <x-ui.button type="submit" variant="success" class="w-full">Checkout via WhatsApp</x-ui.button>
-    </form>
-    @endif
+    </div>
+    </template>
 </div>
 @endsection

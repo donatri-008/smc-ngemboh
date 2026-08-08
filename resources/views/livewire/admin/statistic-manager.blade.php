@@ -1,8 +1,5 @@
-<div class="space-y-6">
-    @if (session('success'))
-    <div class="bg-neu shadow-neu-in rounded-xl px-4 py-3 text-sm text-green-600">{{ session('success') }}</div>
-    @endif
-
+{{-- <div class="space-y-6">
+    @include('partials.admin-flash-messages')
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 class="text-xl font-bold text-gray-700">Kelola Data Statistik</h1>
         <button wire:click="create" class="bg-neu rounded-xl shadow-neu-out active:shadow-neu-in px-5 py-2 text-sm font-medium text-indigo-600 transition">
@@ -56,6 +53,7 @@
     {{ $stats->links() }}
 
     @if($showModal)
+    <template x-teleport="body">
     <div class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
         <div class="bg-neu rounded-2xl shadow-neu-out p-6 w-full max-w-md space-y-4">
             <h2 class="font-semibold text-gray-700">
@@ -103,7 +101,8 @@
     @endif
 
     @if($showDeleteModal)
-    <div class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
+    <template x-teleport="body">
+    <div class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-neu rounded-2xl shadow-neu-out p-6 w-full max-w-sm space-y-4 text-center">
             <p class="text-gray-700">Yakin ingin menghapus data ini?</p>
             <div class="flex justify-center gap-3">
@@ -113,4 +112,4 @@
         </div>
     </div>
     @endif
-</div>
+</div> --}}

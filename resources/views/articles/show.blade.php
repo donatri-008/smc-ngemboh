@@ -3,104 +3,108 @@
 
 @section('content')
 @php
-    $wordCount   = str_word_count(strip_tags($article->content));
-    $readingTime = max(1, (int) ceil($wordCount / 200));
-    $categoryLabel = $article->category === 'produk' ? 'Produk' : 'Kegiatan';
     $paragraphs = collect(explode("\n\n", strip_tags($article->content)))
         ->map(fn ($p) => trim($p))
         ->filter()
         ->values();
 @endphp
 
-<div class="bg-[#F8FAFC] -mx-6 md:-mx-12 px-6 md:px-12 py-10">
+<div class="bg-[#F8FAFC] -mx-4 sm:-mx-6 md:-mx-12 px-4 sm:px-6 md:px-12 py-8 sm:py-10">
     <div class="max-w-3xl mx-auto">
 
         {{-- Breadcrumb --}}
-        <nav class="flex items-left justify-left gap-2 text-sm text-[#64748B] mb-8 flex-wrap text-left">
+        <nav class="flex items-center gap-2 text-xs sm:text-sm text-[#64748B] mb-6 sm:mb-8 flex-wrap">
             <a href="{{ route('articles.index') }}" class="hover:text-brand-blue transition-colors duration-200">Artikel & Berita</a>
             <span class="text-[#CBD5E1]">/</span>
-            <span class="text-[#94A3B8]">{{ $article->title }}</span>
+            <span class="text-[#94A3B8] line-clamp-1">{{ $article->title }}</span>
         </nav>
 
-        {{-- Title --}}
-        <h1 class="text-4xl font-bold text-brand-blue leading-tight mb-6">{{ $article->title }}</h1>
-
-        {{-- Meta info --}}
-        <div class="flex flex-wrap items-center gap-6 pb-8 border-b border-[#F1F5F9] mb-8">
-            <div class="flex items-center gap-2 text-sm text-[#64748B]">
-                <x-heroicon-o-calendar class="w-5 h-5 text-[#3B82F6]" />
+        {{-- Kategori & Tanggal --}}
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+            <span class="bg-brand-green text-white text-[10px] sm:text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
+                {{ $article->category === 'produk' ? 'Artikel' : 'Berita' }}
+            </span>
+            <p class="text-xs sm:text-sm text-[#64748B]">
                 {{ $article->published_at?->translatedFormat('d M Y') }}
-            </div>
-            <div class="flex items-center gap-2 text-sm text-[#64748B]">
-                <x-heroicon-o-tag class="w-5 h-5 text-[#3B82F6]" />
-                {{ $categoryLabel }}
-            </div>
-            <div class="flex items-center gap-2 text-sm text-[#64748B]">
-                <x-heroicon-o-clock class="w-5 h-5 text-[#3B82F6]" />
-                {{ $readingTime }} Menit Baca
-            </div>
+            </p>
         </div>
 
-        {{-- Body --}}
-        <div class="space-y-6">
-            @foreach($paragraphs as $i => $paragraph)
+        {{-- Title --}}
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue leading-tight mb-5 sm:mb-6">
+            {{ $article->title }}
+        </h1>
 
-                @if(Str::startsWith($paragraph, '"') && Str::endsWith($paragraph, '"'))
-                    <blockquote class="border-l-[6px] border-[#3B82F6] pl-8 py-1 italic text-xl text-[#334155] leading-relaxed">
-                        {{ trim($paragraph, '"') }}
-                    </blockquote>
-                @else
-                    <p class="text-lg leading-[1.6] text-[#475569]">{{ $paragraph }}</p>
-                @endif
+        {{-- Thumbnail --}}
+        @if($article->thumbnail)
+        <img src="{{ Storage::url($article->thumbnail) }}" alt="{{ $article->title }}"
+            class="w-full h-56 sm:h-72 md:h-[400px] object-contain rounded-2xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)] mb-6 sm:mb-8">
+        @endif
 
-                @if($i === 1 && $article->thumbnail)
-                <img src="{{ Storage::url($article->thumbnail) }}" alt="{{ $article->title }}"
-                     class="w-full h-[440px] object-cover rounded-2xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-2px_rgba(0,0,0,0.1)]">
-                @endif
+        {{-- Galeri Gambar --}}
+        @if(!empty($article->gallery))
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            @foreach($article->gallery as $path)
+            <a href="{{ Storage::url($path) }}" target="_blank" class="block rounded-xl overflow-hidden group">
+                <img src="{{ Storage::url($path) }}" alt="Galeri {{ $article->title }}"
+                    class="w-full h-28 sm:h-36 md:h-40 object-cover transition-transform duration-300 group-hover:scale-105">
+            </a>
             @endforeach
+        </div>
+        @endif
+
+        {{-- Body --}}
+        <div class="space-y-4 sm:space-y-6">
+            @forelse($paragraphs as $paragraph)
+                <p class="text-base sm:text-lg leading-[1.6] sm:leading-[1.7] text-[#475569]">{{ $paragraph }}</p>
+            @empty
+                <x-ui.empty-state
+                    icon="document-text"
+                    title="Konten Belum Tersedia"
+                    message="Artikel ini belum memiliki isi konten." />
+            @endforelse
         </div>
 
         {{-- Back button --}}
-        <div class="pt-10 mt-10 border-t border-[#F1F5F9]">
+        <div class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-[#F1F5F9]">
             <a href="{{ route('articles.index') }}"
-               class="inline-flex items-center gap-3 px-8 py-3 rounded-full border border-[#E2E8F0] bg-white text-brand-green font-semibold text-sm
+               class="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full border border-[#E2E8F0] bg-white text-brand-green font-semibold text-xs sm:text-sm
                       shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-brand-green hover:text-white hover:border-brand-green">
-                <x-heroicon-o-arrow-left class="w-5 h-5" />
-                Kembali ke Daftar Artikel
+                <x-heroicon-o-arrow-left class="w-4 h-4 sm:w-5 sm:h-5" />
+                Kembali ke Artikel & Berita
             </a>
         </div>
     </div>
 
-    {{-- Related Articles --}}
-    @if($related->isNotEmpty())
-    <div class="max-w-6xl mx-auto mt-24 pt-16 border-t border-[#E2E8F0]">
-        <h2 class="text-3xl font-bold text-brand-blue text-center mb-10">Artikel & Berita Terkait</h2>
+    {{-- Artikel Terkait --}}
+    <div class="max-w-6xl mx-auto mt-16 sm:mt-24 pt-10 sm:pt-16 border-t border-[#E2E8F0]">
+        <h2 class="text-2xl sm:text-3xl font-bold text-brand-blue text-center mb-8 sm:mb-10">Artikel Lainnya</h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @foreach($related as $item)
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+            @forelse($related as $item)
             <a href="{{ route('articles.show', $item) }}"
                class="group block bg-white border border-[#F1F5F9] rounded-2xl overflow-hidden
                       shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1">
                 <div class="relative overflow-hidden">
                     @if($item->thumbnail)
-                    <img src="{{ Storage::url($item->thumbnail) }}" class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="{{ Storage::url($item->thumbnail) }}" class="w-full h-48 sm:h-52 lg:h-56 object-cover transition-transform duration-500 group-hover:scale-110">
                     @else
-                    <div class="w-full h-56 bg-[#F1F5F9]"></div>
+                    <div class="w-full h-48 sm:h-52 lg:h-56 bg-[#F1F5F9]"></div>
                     @endif
-                    <span class="absolute top-3 left-3 bg-brand-green text-white text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
-                        {{ $item->category === 'produk' ? 'Artikel' : 'Berita' }}
-                    </span>
                 </div>
-                <div class="p-6">
-                    <h3 class="text-lg font-bold text-[#1E293B] leading-snug line-clamp-2 mb-2 transition-colors duration-300 group-hover:text-brand-blue">
+                <div class="p-5 sm:p-6">
+                    <h3 class="text-base sm:text-lg font-bold text-[#1E293B] leading-snug line-clamp-2 mb-2 transition-colors duration-300 group-hover:text-brand-blue">
                         {{ $item->title }}
                     </h3>
                     <p class="text-sm text-[#64748B] line-clamp-2">{{ Str::limit(strip_tags($item->content), 90) }}</p>
                 </div>
             </a>
-            @endforeach
+            @empty
+                <x-ui.empty-state
+                    icon="rectangle-stack"
+                    title="Belum Ada Artikel Terkait"
+                    message="Belum ada artikel lain dalam kategori yang sama." />
+            @endforelse
         </div>
     </div>
-    @endif
 </div>
 @endsection

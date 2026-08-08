@@ -14,4 +14,9 @@ class Product extends Model
     protected $casts = [
         'harga' => 'decimal:2',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('urutan');
+    }
 }
