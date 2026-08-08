@@ -9,10 +9,11 @@ class Article extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'content', 'thumbnail', 'category', 'published_at'];
+    protected $fillable = ['title', 'slug', 'content', 'thumbnail', 'category', 'published_at', 'status', 'gallery'];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'gallery' => 'array',
     ];
 
     public function getRouteKeyName()
