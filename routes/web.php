@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{HomeController, ArticleController, EnvironmentController,
-    DemographicController, ShopController, CheckoutController, AboutController};
+    DemographicController, ShopController, CheckoutController, AboutController, ProgramController};
 
 // PUBLIK — tanpa login
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -10,6 +10,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::controller(ArticleController::class)->prefix('artikel')->group(function () {
     Route::get('/', 'index')->name('articles.index');
     Route::get('/{article}', 'show')->name('articles.show');
+});
+
+Route::controller(ProgramController::class)->prefix('program')->group(function () {
+    Route::get('/{program}', 'show')->name('program.show');
 });
 
 Route::get('/info-lingkungan', [EnvironmentController::class, 'index'])->name('environment.index');
