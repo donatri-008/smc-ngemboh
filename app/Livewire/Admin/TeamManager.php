@@ -5,14 +5,13 @@ namespace App\Livewire\Admin;
 use App\Models\{TeamProfile, ActivityLog};
 use App\Traits\OptimizesImages;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 
 class TeamManager extends Component
 {
-    use WithFileUploads, OptimizesImages;
-
-    public $activeTab = 'tim1';
+    use WithPagination, WithFileUploads, OptimizesImages;
 
     public $teamId;
     public $nama;
@@ -26,6 +25,8 @@ class TeamManager extends Component
     public $showDeleteModal = false;
     public $deleteId;
 
+    protected $paginationTheme = 'tailwind';
+
     protected function rules()
     {
         return [
@@ -37,11 +38,11 @@ class TeamManager extends Component
         ];
     }
 
-    public function setTab($tab) { $this->activeTab = $tab; }
-
     public function render()
     {
-        $members = TeamProfile::where('tim', $this->activeTab)->orderBy('urutan')->get();
+        $members = TeamProfile::orderBy('tim')->orderBy('urutan')->paginate(10);
+        $members->withPath(route('admin.team'));
+
         return view('livewire.admin.team-manager', compact('members'))
             ->layout('layouts.admin');
     }
@@ -49,7 +50,6 @@ class TeamManager extends Component
     public function create()
     {
         $this->resetForm();
-        $this->tim = $this->activeTab;
         $this->showModal = true;
     }
 
@@ -102,7 +102,6 @@ class TeamManager extends Component
             ]);
         }
 
-        $this->activeTab = $data['tim'];
         $this->showModal = false;
         $this->resetForm();
         session()->flash('success', 'Data anggota tim berhasil disimpan.');
@@ -133,6 +132,7 @@ class TeamManager extends Component
     private function resetForm()
     {
         $this->reset(['teamId', 'nama', 'jabatan', 'urutan', 'foto', 'existingFoto']);
+        $this->tim = 'tim1';
         $this->resetErrorBag();
     }
 }
