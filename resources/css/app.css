@@ -1,3 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import Alpine from 'alpinejs';
+
+// Halaman admin sudah punya Alpine bawaan dari Livewire (lihat @livewireScripts
+// di layouts/admin.blade.php), jadi di situ kita TIDAK boleh nyalain Alpine lagi
+// biar gak dobel/bentrok. Di halaman publik (yang gak pakai Livewire),
+// window.__usesLivewireAlpine belum pernah di-set, jadi Alpine di sini yang jalan.
+if (!window.__usesLivewireAlpine) {
+    window.Alpine = Alpine;
+    Alpine.start();
+}
