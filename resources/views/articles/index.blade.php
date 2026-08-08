@@ -17,7 +17,7 @@
         <div class="bg-neu shadow-neu-in rounded-full p-2 flex items-center gap-2">
             <a href="{{ request()->fullUrlWithQuery(['category' => 'berita_acara']) }}"
                class="px-6 py-2 rounded-full text-lg font-semibold transition-all duration-300
-                      {{ request('category', 'berita_acara') === 'berita_acara'
+                      {{ request('category') === 'berita_acara'
                          ? 'bg-neu shadow-neu-out text-brand-green'
                          : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white' }}">
                 Berita Kegiatan
@@ -33,7 +33,7 @@
 
         {{-- Search --}}
         <form action="{{ route('articles.index') }}" method="GET" class="relative w-full md:w-96" x-data>
-            <input type="hidden" name="category" value="{{ request('category', 'berita_acara') }}">
+            <input type="hidden" name="category" value="{{ request('category') }}">
             <x-heroicon-o-magnifying-glass class="w-5 h-5 text-brand-green absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel atau berita..."
                    x-on:input.debounce.500ms="$el.form.submit()"
@@ -90,6 +90,6 @@
     </div>
 
     {{-- Pagination --}}
-    {{ $articles->links('vendor.pagination.neu') }}
+    {{ $articles->appends(request()->query())->links('vendor.pagination.neu') }}
 </div>
 @endsection
