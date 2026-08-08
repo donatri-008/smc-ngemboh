@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Admin - Smart Maritim Community Ngemboh</title>
+    <script>window.__usesLivewireAlpine = true;</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
