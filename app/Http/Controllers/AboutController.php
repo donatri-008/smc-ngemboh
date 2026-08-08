@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{AboutContent, Program, Legality, Partner, TeamProfile};
+use App\Models\{AboutContent, Program, Legality, Partner, TeamProfile, Sambutan, HistoryMilestone, LambangMeaning};
 
 class AboutController extends Controller
 {
     public function index()
     {
         $contents = AboutContent::pluck('content', 'section');
+        $sambutans = Sambutan::orderBy('urutan')->get();
+        $historyMilestones = HistoryMilestone::orderBy('urutan')->get();
+        $lambangMeanings = LambangMeaning::orderBy('urutan')->get()->groupBy('posisi');
         $programs = Program::all();
         $legalities = Legality::latest()->get();
         $partners = Partner::all();
         $teamByGroup = TeamProfile::orderBy('urutan')->get()->groupBy('tim');
 
-        return view('about.index', compact('contents', 'programs', 'legalities', 'partners', 'teamByGroup'));
+        return view('about.index', compact(
+            'contents', 'sambutans', 'historyMilestones', 'lambangMeanings',
+            'programs', 'legalities', 'partners', 'teamByGroup'
+        ));
     }
 }
