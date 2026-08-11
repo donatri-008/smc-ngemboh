@@ -3,7 +3,7 @@
     'value',
     'icon' => 'chart-bar',
     'valueSize' => 'text-lg sm:text-xl lg:text-2xl',
-    'iconColor' => 'text-green-500',
+    'iconColor' => 'text-brand-green',
 ])
 
 <div {{ $attributes->merge(['class' => 'bg-neu rounded-2xl sm:rounded-[28px] lg:rounded-[32px] shadow-[6px_6px_12px_#D1D9E6,-6px_-6px_12px_#FFFFFF] p-3 sm:p-5 lg:p-6 flex flex-col gap-1.5 sm:gap-2.5 lg:gap-3 min-w-0']) }}>
