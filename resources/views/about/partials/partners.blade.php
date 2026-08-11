@@ -1,5 +1,5 @@
 <div id="mitra" class="max-w-5xl mx-auto scroll-mt-40">
-    <h2 class="text-lg sm:text-xl font-bold text-gray-700 mb-4 sm:mb-6 text-center">Mitra</h2>
+    <h2 class="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 text-center">Mitra</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
         @forelse($partners as $partner)
         <x-ui.card padding="p-3 sm:p-4" class="text-center space-y-2">

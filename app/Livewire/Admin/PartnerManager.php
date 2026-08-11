@@ -17,7 +17,6 @@ class PartnerManager extends Component
 
     public $partnerId;
     public $nama;
-    public $link;
     public $logo;
     public $existingLogo;
 
@@ -31,7 +30,6 @@ class PartnerManager extends Component
     {
         return [
             'nama' => 'required|string|max:255',
-            'link' => 'nullable|url',
             'logo' => ($this->partnerId ? 'nullable' : 'required') . '|image|max:2048',
         ];
     }
@@ -55,7 +53,6 @@ class PartnerManager extends Component
         $partner = Partner::findOrFail($id);
         $this->partnerId   = $partner->id;
         $this->nama        = $partner->nama;
-        $this->link        = $partner->link;
         $this->existingLogo = $partner->logo;
         $this->showModal = true;
     }
@@ -66,7 +63,6 @@ class PartnerManager extends Component
 
         $data = [
             'nama' => $this->nama,
-            'link' => $this->link,
         ];
 
         if ($this->logo) {
@@ -124,7 +120,7 @@ class PartnerManager extends Component
 
     private function resetForm()
     {
-        $this->reset(['partnerId', 'nama', 'link', 'logo', 'existingLogo']);
+        $this->reset(['partnerId', 'nama', 'logo', 'existingLogo']);
         $this->resetErrorBag();
     }
 }

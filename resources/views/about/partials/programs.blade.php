@@ -1,5 +1,5 @@
 <div id="program-kerja" class="max-w-5xl mx-auto scroll-mt-40">
-    <h2 class="text-lg sm:text-xl font-bold text-gray-700 mb-4 sm:mb-6 text-center px-4">Program Kerja</h2>
+    <h2 class="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 text-center px-4">Program Kerja</h2>
 
     <div class="relative">
         <div class="flex gap-3 sm:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar px-4 sm:px-0 scroll-pl-4 sm:scroll-pl-0">

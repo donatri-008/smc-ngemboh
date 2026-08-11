@@ -3,7 +3,7 @@
 @endphp
 
 <div id="legalitas" x-data="{ open: false, title: '', kategori: '', image: '' }" class="max-w-5xl mx-auto scroll-mt-40">
-    <h2 class="text-lg sm:text-xl font-bold text-gray-700 mb-4 sm:mb-6 text-center">Sertifikasi & Legalitas</h2>
+    <h2 class="text-lg sm:text-xl font-bold text-brand-navy mb-4 sm:mb-6 text-center">Sertifikasi & Legalitas</h2>
 
     <div class="flex gap-4 sm:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory hide-scrollbar">
         @forelse($legalities as $index => $legality)

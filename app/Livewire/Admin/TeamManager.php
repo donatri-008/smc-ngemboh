@@ -13,6 +13,8 @@ class TeamManager extends Component
 {
     use WithPagination, WithFileUploads, OptimizesImages;
 
+    public $search = '';
+
     public $teamId;
     public $nama;
     public $jabatan;
@@ -24,7 +26,6 @@ class TeamManager extends Component
     public $showModal = false;
     public $showDeleteModal = false;
     public $deleteId;
-    public $activeTab = 'BPH';
 
     protected $paginationTheme = 'tailwind';
 
@@ -33,28 +34,25 @@ class TeamManager extends Component
         return [
             'nama'    => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
-            'tim'     => 'required|inBPH,Penanggung Jawab,PPK Ormawa',
+            'tim'     => 'required|in:BPH,Penanggung Jawab,PPK Ormawa',
             'urutan'  => 'nullable|integer|min:0',
             'foto'    => 'nullable|image|max:2048',
         ];
     }
 
+    public function updatingSearch() { $this->resetPage(); }
+
     public function render()
     {
-        $members = TeamProfile::where('tim', $this->activeTab)
-            ->orderBy('urutan')
+        $members = TeamProfile::query()
+            ->when($this->search, fn ($q) => $q->where('nama', 'like', '%' . $this->search . '%'))
+            ->orderBy('tim')->orderBy('urutan')
             ->paginate(10);
 
         $members->withPath(route('admin.team'));
 
         return view('livewire.admin.team-manager', compact('members'))
             ->layout('layouts.admin');
-    }
-
-    public function setTab($tab)
-    {
-        $this->activeTab = $tab;
-        $this->resetPage();
     }
 
     public function create()

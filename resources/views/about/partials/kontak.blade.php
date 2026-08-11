@@ -8,8 +8,8 @@
     ];
 @endphp
 
-<div id="kontak" class="bg-[#0F1E3D] rounded-2xl sm:rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 scroll-mt-40">
-    <h2 class="text-lg sm:text-2xl font-bold text-white text-center mb-6 sm:mb-10">Informasi Kontak</h2>
+<div id="kontak" class="bg-neu rounded-2xl sm:rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 scroll-mt-40">
+    <h2 class="text-lg sm:text-2xl font-bold text-brand-navy text-center mb-6 sm:mb-10">Informasi Kontak</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 max-w-4xl mx-auto">
         @foreach($kontakList as $item)

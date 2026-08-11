@@ -18,7 +18,7 @@
 
         {{-- Judul + Isi --}}
         <div class="flex-1 min-w-0 text-center md:text-left">
-            <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-brand-blue">
+            <p class="text-[11px] sm:text-xs font-bold uppercase tracking-wide text-brand-navy">
                 Sambutan {{ $item->jabatan }}
             </p>
             <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-[#1E293B] mt-1 sm:mt-2">

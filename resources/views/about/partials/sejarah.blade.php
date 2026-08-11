@@ -1,8 +1,8 @@
-<div class="bg-[#0F1E3D] rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 space-y-10 sm:space-y-16">
+<div class="bg-neu rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 space-y-10 sm:space-y-16">
 
     {{-- Jejak Langkah Kami --}}
     <div id="jejak-langkah" class="scroll-mt-40">
-        <h2 class="text-xl sm:text-2xl font-bold text-white text-center mb-8 sm:mb-16">Jejak Langkah Kami</h2>
+        <h2 class="text-xl sm:text-2xl font-bold text-brand-navy text-center mb-8 sm:mb-16">Jejak Langkah Kami</h2>
 
         {{-- ===== Versi Mobile/Tablet: garis vertikal di kiri ===== --}}
         <div class="md:hidden max-w-3xl mx-auto">
@@ -10,19 +10,19 @@
             <div class="flex gap-4">
                 {{-- Kolom dot + garis penyambung --}}
                 <div class="flex flex-col items-center">
-                    <span class="w-3 h-3 rounded-full bg-emerald-400 shrink-0 mt-1.5"></span>
+                    <span class="w-3 h-3 rounded-full bg-brand-green shrink-0 mt-1.5"></span>
                     @if(!$loop->last)
-                    <span class="w-px flex-1 bg-white/20"></span>
+                    <span class="w-3 flex-1 bg-white rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.08)]"></span>
                     @endif
                 </div>
 
                 {{-- Kartu isi --}}
                 <div class="flex-1 pb-6 sm:pb-10 min-w-0">
-                    <div class="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 text-left">
-                        <h3 class="font-bold text-white text-sm sm:text-base mb-2 sm:mb-3">
+                    <div class="bg-white border border-gray-100 rounded-2xl p-4 sm:p-6 text-left shadow-sm">
+                        <h3 class="font-bold text-gray-800 text-sm sm:text-base mb-2 sm:mb-3">
                             {{ $item->judul }}
                         </h3>
-                        <div class="text-xs sm:text-sm text-white/70 leading-relaxed whitespace-pre-line text-left">
+                        <div class="text-xs sm:text-sm text-gray-500 leading-relaxed whitespace-pre-line text-left">
                             {{ $item->isi }}
                         </div>
                     </div>
@@ -33,7 +33,7 @@
 
         {{-- ===== Versi Desktop: zigzag kiri-kanan seperti semula ===== --}}
         <div class="hidden md:block relative max-w-3xl mx-auto">
-            <div class="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 -translate-x-1/2"></div>
+            <div class="absolute left-1/2 top-0 bottom-0 w-3 bg-white rounded-full shadow-[0_0_0_1px_rgba(0,0,0,0.08)] -translate-x-1/2"></div>
 
             <div class="space-y-10">
                 @foreach($historyMilestones as $index => $item)
@@ -41,17 +41,17 @@
                             {{ $index % 2 === 1 ? 'flex-row-reverse' : '' }}">
 
                     <div class="w-1/2 {{ $index % 2 === 1 ? 'pl-10' : 'pr-10' }}">
-                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-left">
-                            <h3 class="font-bold text-white text-base mb-3">
+                        <div class="bg-white border border-gray-100 rounded-2xl p-6 text-left shadow-sm">
+                            <h3 class="font-bold text-brand-navy text-base mb-3">
                                 {{ $item->judul }}
                             </h3>
-                            <div class="text-sm text-white/70 leading-relaxed whitespace-pre-line text-left">
+                            <div class="text-sm text-gray-500 leading-relaxed whitespace-pre-line text-left">
                                 {{ $item->isi }}
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex w-4 h-4 rounded-full bg-emerald-400 border-4 border-[#0F1E3D] absolute left-1/2 top-6 -translate-x-1/2"></div>
+                    <div class="flex w-4 h-4 rounded-full bg-brand-green border-4 border-neu absolute left-1/2 top-6 -translate-x-1/2"></div>
 
                     <div class="w-1/2"></div>
                 </div>
@@ -63,14 +63,14 @@
     {{-- Visi & Misi --}}
     <div id="visi-misi" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto scroll-mt-40">
         <div class="bg-white rounded-2xl p-5 sm:p-8">
-            <h3 class="text-base sm:text-lg font-bold text-brand-blue mb-3 sm:mb-4">Visi Kami</h3>
+            <h3 class="text-base sm:text-lg font-bold text-brand-navy mb-3 sm:mb-4">Visi Kami</h3>
             <p class="text-xs sm:text-sm text-gray-600 leading-relaxed italic">
                 "{{ $contents['visi'] ?? '-' }}"
             </p>
         </div>
 
         <div class="bg-white rounded-2xl p-5 sm:p-8">
-            <h3 class="text-base sm:text-lg font-bold text-brand-blue mb-3 sm:mb-4">Misi Kami</h3>
+            <h3 class="text-base sm:text-lg font-bold text-brand-navy mb-3 sm:mb-4">Misi Kami</h3>
             <ul class="space-y-2.5 sm:space-y-3">
                 @foreach(explode("\n", $contents['misi'] ?? '') as $poin)
                 @if(trim($poin) !== '')
@@ -86,7 +86,7 @@
 
     {{-- Filosofi Lambang --}}
     <div id="filosofi-lambang" class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-12 max-w-5xl mx-auto scroll-mt-40">
-        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-brand-blue text-center mb-5 sm:mb-6">Filosofi Lambang</h3>
+        <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-brand-navy text-center mb-5 sm:mb-6">Filosofi Lambang</h3>
 
         <div class="flex items-center justify-center mb-6 sm:mb-10">
             @if($images['lambang'] ?? false)

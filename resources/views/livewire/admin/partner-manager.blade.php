@@ -34,39 +34,33 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full min-w-[560px] text-sm table-fixed">
+            <table class="w-full min-w-[420px] text-sm table-fixed">
                 <colgroup>
-                    <col class="w-[76px]">
-                    <col class="w-[34%]">
-                    <col class="w-auto">
-                    <col class="w-[120px]">
+                    <col class="w-1/3">
+                    <col class="w-1/3">
+                    <col class="w-1/3">
                 </colgroup>
                 <thead>
                     <tr class="text-left text-[#717785] border-b border-[#E0E2EC]/30">
-                        <th class="pl-4 sm:pl-8 py-4 font-bold text-base whitespace-nowrap" colspan="2">Nama Mitra</th>
-                        <th class="px-2 py-4 font-bold text-base whitespace-nowrap">Link</th>
+                        <th class="pl-4 sm:pl-8 py-4 font-bold text-base whitespace-nowrap">Nama Mitra</th>
+                        <th class="px-2 py-4 font-bold text-base text-center whitespace-nowrap">Logo</th>
                         <th class="pr-4 sm:pr-8 py-4 font-bold text-base text-center whitespace-nowrap">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($partners as $partner)
                     <tr class="border-b border-[#E0E2EC]/30 last:border-0 align-middle">
-                        <td class="pl-4 sm:pl-8 py-5">
-                            @if($partner->logo)
-                            <img src="{{ Storage::url($partner->logo) }}" class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm p-1.5">
-                            @else
-                            <div class="w-12 h-12 rounded-xl bg-[#e5e7eab5] flex items-center justify-center">
-                                <x-heroicon-o-photo class="w-5 h-5 text-gray-400" />
+                        <td class="pl-4 sm:pl-8 py-5 font-bold text-[#181C23] truncate">{{ $partner->nama }}</td>
+                        <td class="py-5 px-2">
+                            <div class="flex justify-center">
+                                @if($partner->logo)
+                                <img src="{{ Storage::url($partner->logo) }}" class="w-12 h-12 rounded-xl object-contain bg-white shadow-sm p-1.5">
+                                @else
+                                <div class="w-12 h-12 rounded-xl bg-[#e5e7eab5] flex items-center justify-center">
+                                    <x-heroicon-o-photo class="w-5 h-5 text-gray-400" />
+                                </div>
+                                @endif
                             </div>
-                            @endif
-                        </td>
-                        <td class="py-5 px-2 font-bold text-[#181C23] truncate">{{ $partner->nama }}</td>
-                        <td class="py-5 px-2 text-[#2681FA] truncate">
-                            @if($partner->link)
-                            <a href="{{ $partner->link }}" target="_blank" class="hover:underline">{{ $partner->link }}</a>
-                            @else
-                            <span class="text-[#8A93A6]">-</span>
-                            @endif
                         </td>
                         <td class="pr-4 sm:pr-8 py-5">
                             <div class="flex items-center justify-center gap-2">
@@ -83,7 +77,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4">
+                        <td colspan="3">
                             <x-ui.table-empty-state
                                 icon="building-office-2"
                                 title="Belum Ada Mitra"
@@ -186,13 +180,6 @@
                     <input wire:model="nama" type="text" placeholder="Masukkan nama mitra"
                         class="w-full mt-2 bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-sm text-[#181C23] placeholder:text-[#BFC8CB] outline-none">
                     @error('nama') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
-                </div>
-
-                <div>
-                    <label class="text-[13px] font-semibold tracking-wide text-[#40484B]">Link (opsional)</label>
-                    <input wire:model="link" type="text" placeholder="https://..."
-                        class="w-full mt-2 bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-sm text-[#181C23] placeholder:text-[#BFC8CB] outline-none">
-                    @error('link') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                 </div>
 
                 <div>

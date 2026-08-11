@@ -1,9 +1,9 @@
 @php
-    $groups = ['tim1' => 'BPH', 'tim2' => 'Penanggung Jawab', 'tim3' => 'PPK Ormawa'];
+    $groups = ['BPH' => 'BPH', 'Penanggung Jawab' => 'Penanggung Jawab', 'PPK Ormawa' => 'PPK Ormawa'];
 @endphp
 
-<div id="profil-tim" x-data="{ tab: 'tim1' }" class="max-w-5xl mx-auto space-y-5 sm:space-y-8 scroll-mt-40">
-    <h2 class="text-lg sm:text-xl font-bold text-gray-700 text-center">Pembagian Tim</h2>
+<div id="profil-tim" x-data="{ tab: 'BPH' }" class="max-w-5xl mx-auto space-y-5 sm:space-y-8 scroll-mt-40">
+    <h2 class="text-lg sm:text-xl font-bold text-brand-navy text-center">Pembagian Tim</h2>
 
     {{-- Tab Pills --}}
     <div class="flex justify-center">

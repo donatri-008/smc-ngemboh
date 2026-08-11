@@ -10,7 +10,7 @@
             Artikel & Berita Terbaru
         </h1>
         <p class="text-ink text-sm sm:text-base mt-3 sm:mt-4 px-2">
-            Temukan informasi terkini seputar kegiatan komunitas, inovasi maritim, dan perkembangan lingkungan di Desa Ngemboh.
+            Ikuti informasi terbaru mengenai kegiatan, program, serta edukasi kami terkait dengan perkembangan Smart Maritime Community di Desa Ngemboh.
         </p>
     </div>
 
