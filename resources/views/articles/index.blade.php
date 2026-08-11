@@ -2,6 +2,7 @@
 @section('title', 'Artikel & Berita - Smart Maritim Community Ngemboh')
 
 @section('content')
+<div class="bg-section-blue">
 <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-12 sm:pb-16">
 
     {{-- Header --}}
@@ -114,5 +115,6 @@
             {{ $articles->appends(request()->query())->links('vendor.pagination.neu') }}
         </div>
     </div>
+</div>
 </div>
 @endsection
