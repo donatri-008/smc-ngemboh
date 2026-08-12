@@ -36,7 +36,7 @@ class TeamManager extends Component
             'jabatan' => 'required|string|max:255',
             'tim'     => 'required|in:BPH,Penanggung Jawab,PPK Ormawa',
             'urutan'  => 'nullable|integer|min:0',
-            'foto'    => 'nullable|image|max:2048',
+            'foto'    => 'nullable|image|max:6144',
         ];
     }
 

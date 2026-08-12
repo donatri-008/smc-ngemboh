@@ -32,7 +32,7 @@
             <div class="flex items-center gap-2 w-full pb-4 sm:pb-6 border-b border-[#F1F5F9]">
                 <x-heroicon-o-calendar class="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#2655B6] shrink-0" />
                 <span class="text-xs sm:text-sm text-[#64748B]">
-                    {{ $program->created_at->translatedFormat('d M Y') }}
+                    {{ $program->created_at->translatedFormat('d F Y') }}
                 </span>
             </div>
 

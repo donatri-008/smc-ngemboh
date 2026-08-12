@@ -2,10 +2,10 @@
 @section('title', 'Belanja - Smart Maritim Community Ngemboh')
 
 @section('content')
-<div class="bg-blue-50/60 min-h-screen">
+<div class="bg-section-blue min-h-screen">
     <div class="max-w-4xl mx-auto px-6 pt-10 sm:pt-16 pb-10 text-center space-y-3 sm:space-y-4">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-700 tracking-tight">Katalog Produk</h1>
-        <p class="text-[#454545] text-sm sm:text-base">Cari tahu terkait produk unggulan Desa Ngemboh</p>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-navy tracking-tight break-words">Katalog Produk</h1>
+        <p class="text-ink text-sm sm:text-base">Cari tahu terkait produk unggulan Desa Ngemboh</p>
     </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20 space-y-8 sm:space-y-10">

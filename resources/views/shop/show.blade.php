@@ -11,7 +11,7 @@
 @endphp
 
 @section('content')
-<div class="bg-blue-50/60 min-h-screen">
+<div class="bg-section-blue min-h-screen">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-16 sm:pb-20 space-y-4">
 
         <a href="{{ route('shop.index') }}" class="inline-flex w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#4CC71C] items-center justify-center hover:bg-[#3DA617] transition">

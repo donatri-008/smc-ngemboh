@@ -2,10 +2,10 @@
 @section('title', 'Info Lingkungan - Smart Maritim Community Ngemboh')
 
 @section('content')
-<div class="bg-blue-50/60">
+<div class="bg-section-blue">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 text-center space-y-3 sm:space-y-4">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-700">Info Lingkungan</h1>
-        <p class="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">Sajian informasi mengenai info lingkungan berdasarkan data Dinas Lingkungan Hidup kabupaten Gresik</p>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-navy tracking-tight break-words">Info Lingkungan</h1>
+        <p class="text-sm sm:text-base text-ink max-w-xl mx-auto">Sajian informasi mengenai info lingkungan berdasarkan data Dinas Lingkungan Hidup kabupaten Gresik</p>
         @include('partials.data-tab-switcher', ['active' => 'lingkungan'])
     </div>
 

@@ -225,10 +225,18 @@
                         class="bg-white shadow-[6px_6px_12px_#BABECC,-6px_-6px_12px_#FFFFFF] rounded-2xl px-6 sm:px-10 py-3.5 sm:py-4 text-[#4CC71C] font-bold transition-transform active:scale-95">
                     Batal
                 </button>
-                <button wire:click="save"
-                        class="flex items-center justify-center gap-2 bg-[#4CC71C] shadow-[6px_6px_12px_#BABECC,-6px_-6px_12px_#FFFFFF] rounded-2xl px-6 sm:px-10 py-3.5 sm:py-4 text-white font-bold transition-transform active:scale-95">
-                    <x-heroicon-o-check class="w-[14px] h-[14px]" />
-                    {{ $teamId ? 'Edit' : 'Simpan' }}
+
+                <button wire:click="save" wire:loading.attr="disabled" wire:target="save,foto"
+                        class="grid place-items-center min-w-[150px] sm:min-w-[170px] bg-[#4CC71C] shadow-[6px_6px_12px_#BABECC,-6px_-6px_12px_#FFFFFF] rounded-2xl px-6 sm:px-10 py-3.5 sm:py-4 text-white font-bold transition-transform active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed">
+                    <span wire:loading.remove.flex wire:target="save,foto"
+                        class="col-start-1 row-start-1 flex items-center gap-2 whitespace-nowrap">
+                        <x-heroicon-o-check class="w-[14px] h-[14px] shrink-0" />
+                        {{ $teamId ? 'Edit' : 'Simpan' }}
+                    </span>
+                    <span wire:loading.flex wire:target="save,foto"
+                        class="col-start-1 row-start-1 flex items-center whitespace-nowrap">
+                        Proses...
+                    </span>
                 </button>
             </div>
         </div>

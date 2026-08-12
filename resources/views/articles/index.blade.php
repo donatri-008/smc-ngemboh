@@ -7,7 +7,7 @@
 
     {{-- Header --}}
     <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-blue tracking-tight">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-navy tracking-tight break-words">
             Artikel & Berita Terbaru
         </h1>
         <p class="text-ink text-sm sm:text-base mt-3 sm:mt-4 px-2">
@@ -17,16 +17,16 @@
 
     {{-- Tabs & Search --}}
     <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 sm:mb-10">
-        <div class="bg-neu shadow-neu-in rounded-full p-2 flex items-center gap-2 w-full md:w-auto overflow-x-auto no-scrollbar">
+        <div class="bg-neu shadow-neu-in rounded-full p-2 flex items-center gap-2 w-full md:w-auto">
             <a href="{{ request()->fullUrlWithQuery(['category' => 'berita_acara']) }}"
-               class="flex-1 md:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
+               class="flex-1 md:flex-none text-center whitespace-nowrap px-3 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
                       {{ request('category') === 'berita_acara'
                          ? 'bg-neu shadow-neu-out text-brand-green'
                          : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white' }}">
                 Berita Kegiatan
             </a>
             <a href="{{ request()->fullUrlWithQuery(['category' => 'produk']) }}"
-               class="flex-1 md:flex-none text-center whitespace-nowrap px-4 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
+               class="flex-1 md:flex-none text-center whitespace-nowrap px-3 sm:px-6 py-2 rounded-full text-sm sm:text-lg font-semibold transition-all duration-300
                       {{ request('category') === 'produk'
                          ? 'bg-neu shadow-neu-out text-brand-green'
                          : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white' }}">
@@ -37,6 +37,8 @@
         {{-- Search --}}
         <form action="{{ route('articles.index') }}" method="GET" class="relative w-full md:w-96" x-data>
             <input type="hidden" name="category" value="{{ request('category') }}">
+            {{-- per_page ikut disertakan biar filter/pencarian tidak me-reset ukuran halaman --}}
+            <input type="hidden" name="per_page" value="{{ request('per_page') }}">
             <x-heroicon-o-magnifying-glass class="w-5 h-5 text-brand-green absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel atau berita..."
                    x-on:input.debounce.500ms="$el.form.submit()"
@@ -45,6 +47,11 @@
     </div>
 
     {{-- Grid Artikel --}}
+    {{--
+        Jumlah item per halaman ditentukan lewat query string "per_page" yang
+        di-sync otomatis oleh script di bawah berdasarkan lebar layar
+        (window.innerWidth), lalu divalidasi & dipakai di ArticleController@index.
+    --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mb-12">
         @forelse($articles as $article)
         <a href="{{ route('articles.show', $article) }}"
@@ -68,11 +75,11 @@
                 <div class="flex items-center gap-2 mb-3">
                     <x-heroicon-o-calendar class="w-4 h-4 text-muted shrink-0" />
                     <p class="text-[12px] sm:text-[13px] font-semibold text-ink tracking-wide">
-                        {{ $article->published_at?->translatedFormat('d M Y') }}
+                        {{ $article->published_at?->translatedFormat('d F Y') }}
                     </p>
                 </div>
 
-                <h3 class="text-lg sm:text-xl font-semibold text-dark leading-snug mb-3 line-clamp-2 transition-colors duration-300 group-hover:text-brand-blue">
+                <h3 class="text-lg sm:text-xl font-semibold text-dark leading-snug mb-3 line-clamp-2 break-words transition-colors duration-300 group-hover:text-brand-blue">
                     {{ $article->title }}
                 </h3>
 
@@ -117,4 +124,45 @@
     </div>
 </div>
 </div>
+
+@push('scripts')
+<script>
+(function () {
+    var BREAKPOINT = 768;
+    var MOBILE_PER_PAGE = 6;
+    var DESKTOP_PER_PAGE = 9;
+
+    function desiredPerPage() {
+        return window.innerWidth < BREAKPOINT ? MOBILE_PER_PAGE : DESKTOP_PER_PAGE;
+    }
+
+    function currentPerPage(params) {
+        var val = parseInt(params.get('per_page'), 10);
+        return isNaN(val) ? DESKTOP_PER_PAGE : val;
+    }
+
+    function syncPerPage() {
+        var url = new URL(window.location.href);
+        var params = url.searchParams;
+        var desired = desiredPerPage();
+
+        if (currentPerPage(params) === desired) {
+            return;
+        }
+
+        params.set('per_page', desired);
+        params.set('page', '1'); 
+        window.location.href = url.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', syncPerPage);
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(syncPerPage, 400);
+    });
+})();
+</script>
+@endpush
 @endsection

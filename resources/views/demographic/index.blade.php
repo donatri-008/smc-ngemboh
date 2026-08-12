@@ -2,10 +2,10 @@
 @section('title', 'Data Demografi - Smart Maritim Community Ngemboh')
 
 @section('content')
-<div class="bg-blue-50/60">
+<div class="bg-section-blue">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-10 text-center space-y-3 sm:space-y-4">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-blue-700">Data Demografi</h1>
-        <p class="text-sm sm:text-base text-gray-500 max-w-xl mx-auto">Pemaparan terkait data kependudukan dan kondisi sosial masyarakat Desa Ngemboh sebagai gambaran karakteristik wilayah</p>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-brand-navy tracking-tight break-words">Data Demografi</h1>
+        <p class="text-sm sm:text-base text-ink max-w-xl mx-auto">Pemaparan terkait data kependudukan dan kondisi sosial masyarakat Desa Ngemboh sebagai gambaran karakteristik wilayah</p>
         @include('partials.data-tab-switcher', ['active' => 'demografi'])
     </div>
 

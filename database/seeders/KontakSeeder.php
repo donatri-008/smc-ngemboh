@@ -11,8 +11,8 @@ class KontakSeeder extends Seeder
     {
         $data = [
             'whatsapp'  => '+62 811 2345 6789',
-            'email'     => 'support@maritimehub.id',
-            'instagram' => '@maritimehub_id',
+            'email'     => 'official.smartmaritimcommunity@gmail.com',
+            'instagram' => '@smartmaritim_community',
             'shopee'    => '@maritimehub_id',
             'tiktok'    => '@maritimehub_id',
         ];

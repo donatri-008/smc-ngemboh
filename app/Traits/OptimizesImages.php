@@ -17,8 +17,12 @@ trait OptimizesImages
      */
     protected function optimizeAndStore(UploadedFile $file, string $folder, int $maxWidth = 1200, int $quality = 75): string
     {
+        ini_set('memory_limit', '512M');
+
         $manager = ImageManager::usingDriver(Driver::class);
         $image = $manager->decodeSplFileInfo($file);
+
+        $image->orient();
 
         if ($image->width() > $maxWidth) {
             $image->scale(width: $maxWidth);

@@ -1,8 +1,11 @@
-<div class="bg-neu rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 space-y-10 sm:space-y-16">
+<div class="bg-section-blue rounded-3xl px-4 sm:px-6 md:px-12 py-8 sm:py-14 space-y-10 sm:space-y-16">
 
     {{-- Jejak Langkah Kami --}}
     <div id="jejak-langkah" class="scroll-mt-40">
-        <h2 class="text-xl sm:text-2xl font-bold text-brand-navy text-center mb-8 sm:mb-16">Jejak Langkah Kami</h2>
+        <div class="text-center mb-8 sm:mb-16">
+            <h2 class="text-xl sm:text-2xl font-bold text-brand-navy">Jejak Langkah Kami</h2>
+            <span class="block w-16 sm:w-20 h-1 bg-brand-navy rounded-full mx-auto mt-3 sm:mt-4"></span>
+        </div>
 
         {{-- ===== Versi Mobile/Tablet: garis vertikal di kiri ===== --}}
         <div class="md:hidden max-w-3xl mx-auto">
