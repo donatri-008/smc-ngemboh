@@ -1,58 +1,95 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Smart Maritim Community Ngemboh (SMC Ngemboh)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Platform komunitas berbasis web untuk Desa Ngemboh, sebuah desa pesisir nelayan. Aplikasi ini menjadi wadah digital untuk publikasi artikel & berita, data demografi nelayan, informasi lingkungan, profil tim/organisasi, katalog produk, serta legalitas komunitas — dilengkapi dashboard admin untuk mengelola seluruh konten.
 
-## About Laravel
+## Tentang Proyek
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Smart Maritim Community Ngemboh adalah aplikasi web yang dibangun untuk mendukung transparansi informasi dan branding digital komunitas maritim di Desa Ngemboh. Aplikasi terdiri dari dua sisi utama:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Halaman publik** — beranda, artikel & berita, data & informasi (demografi nelayan, info lingkungan), belanja/produk, dan halaman "Tentang Kami" (sejarah, visi-misi, filosofi lambang, profil tim, program kerja).
+- **Dashboard admin** — panel pengelolaan konten untuk artikel, produk, data demografis, info lingkungan, sertifikat & legalitas, profil tim, dan mitra.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Fitur Utama
 
-## Learning Laravel
+- 📰 **Manajemen Artikel & Berita** — CRUD artikel dengan kategori (berita kegiatan & artikel produk), thumbnail, galeri gambar, dan pencarian.
+- 👥 **Manajemen Profil Tim** — pengelolaan anggota tim per kelompok (BPH, Penanggung Jawab, PPK Ormawa) lengkap dengan foto (otomatis dikoreksi orientasinya berdasarkan EXIF) dan urutan tampilan.
+- 📊 **Data Demografis Nelayan** — visualisasi dan pengelolaan data statistik nelayan komunitas.
+- 🌊 **Info Lingkungan** — publikasi informasi terkait kondisi lingkungan pesisir.
+- 🛒 **Belanja/Produk** — katalog produk komunitas dengan alur checkout terintegrasi WhatsApp.
+- 📜 **Sertifikat & Legalitas** — dokumentasi legalitas resmi komunitas.
+- 🤝 **Mitra** — pengelolaan daftar mitra/kolaborator komunitas.
+- 🎨 **Desain Neumorphic** — antarmuka modern dengan gaya neumorphism (soft UI), responsif di berbagai perangkat.
+- ⚡ **Reaktif tanpa reload penuh** — interaksi CRUD, pencarian, dan pagination berjalan mulus lewat Livewire.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Tech Stack
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Kategori | Teknologi |
+|---|---|
+| Backend | [Laravel](https://laravel.com) |
+| Frontend Interaktif | [Livewire 3](https://livewire.laravel.com), [Alpine.js](https://alpinejs.dev) |
+| Styling | [Tailwind CSS](https://tailwindcss.com) (dengan sistem desain neumorphic kustom) |
+| Templating | Blade |
+| Build Tool | [Vite](https://vitejs.dev) |
+| Image Processing | Intervention Image (optimasi & koreksi orientasi EXIF) |
+| Testing | PHPUnit |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Struktur Proyek
 
-## Agentic Development
+```
+app/
+├── Http/Controllers/            # Controller halaman publik
+├── Livewire/Admin/               # Komponen Livewire dashboard admin
+├── Models/                       # Eloquent model
+└── Traits/OptimizesImages.php    # Optimasi & koreksi EXIF foto
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+resources/
+├── css/
+├── js/
+└── views/
+    ├── about/
+    │   ├── partials/
+    │   │   ├── kontak.blade.php
+    │   │   ├── legalities.blade.php
+    │   │   ├── partners.blade.php
+    │   │   ├── programs.blade.php
+    │   │   ├── sambutan.blade.php
+    │   │   ├── sejarah.blade.php
+    │   │   └── team.blade.php
+    │   └── index.blade.php
+    ├── articles/
+    │   ├── index.blade.php
+    │   └── show.blade.php
+    ├── auth/
+    ├── components/
+    │   └── ui/                   # Komponen UI reusable (badge, button, card, empty-state, stat-card, dll.)
+    ├── demographic/index.blade.php
+    ├── environment/index.blade.php
+    ├── errors/                   # 403, 404, 500
+    ├── home/index.blade.php
+    ├── layouts/                  # admin, app, guest, navigation
+    ├── livewire/admin/           # Semua komponen manager admin
+    │                             # (article, demographic, environment,
+    │                             #  legality, partner, product, statistic,
+    │                             #  team, dashboard-overview)
+    ├── partials/                 # navbar, footer, flash-messages, seo-meta, admin-sidebar-content, dll.
+    ├── programs/show.blade.php
+    ├── shop/                     # cart, index, show
+    ├── vendor/
+    ├── dashboard.blade.php
+    ├── sitemap.blade.php
+    └── welcome.blade.php
 
-```bash
-composer require laravel/boost --dev
+routes/
+├── auth.php
+├── console.php
+└── web.php
 
-php artisan boost:install
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Desain & UI
 
-## Contributing
+Proyek ini mengikuti sistem desain neumorphic yang selaras dengan mockup Figma, dengan token warna dan shadow yang konsisten, contohnya:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Warna aksen: `#2681FA` (brand blue), `#4CC71C` (brand green), `#F6F9FF` (background)
+- Shadow neumorphic: `6px 6px 12px #BABECC` dikombinasikan dengan highlight putih untuk efek soft UI
+- Layout responsif dengan pendekatan mobile-first (breakpoint `sm`, `md`, `lg` dari Tailwind)
