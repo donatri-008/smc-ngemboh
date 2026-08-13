@@ -88,8 +88,6 @@ routes/
 
 ## Desain & UI
 
-Proyek ini mengikuti sistem desain neumorphic yang selaras dengan mockup Figma, dengan token warna dan shadow yang konsisten, contohnya:
-
 - Warna aksen: `#2681FA` (brand blue), `#4CC71C` (brand green), `#F6F9FF` (background)
 - Shadow neumorphic: `6px 6px 12px #BABECC` dikombinasikan dengan highlight putih untuk efek soft UI
 - Layout responsif dengan pendekatan mobile-first (breakpoint `sm`, `md`, `lg` dari Tailwind)
