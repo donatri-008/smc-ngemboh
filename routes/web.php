@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{HomeController, ArticleController, EnvironmentController,
-    DemographicController, ShopController, CheckoutController, AboutController, ProgramController};
+    DemographicController, ShopController, CheckoutController, AboutController, ProgramController, SitemapController};
 
 // PUBLIK — tanpa login
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,6 +30,9 @@ Route::controller(ShopController::class)->prefix('belanja')->group(function () {
 Route::post('/checkout', [CheckoutController::class, 'redirectToWhatsapp'])->name('checkout');
 
 Route::get('/tentang-kami', [AboutController::class, 'index'])->name('about.index');
+
+// SEO — sitemap.xml dinamis
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // ADMIN — wajib melakukan login
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
