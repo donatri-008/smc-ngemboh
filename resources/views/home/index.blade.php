@@ -4,7 +4,7 @@
 @section('content')
 
 <section class="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 bg-cover bg-center"
-         style="background-image: url('{{ asset('assets/bg-beranda.jpg') }}')">
+         style="background-image: url('{{ asset('assets/bg-beranda.webp') }}')">
     <div class="absolute inset-0 bg-black/10"></div>
 
     <div class="relative z-10 max-w-4xl w-full bg-white/15 backdrop-blur border border-white/40 shadow-xl rounded-3xl sm:rounded-[50px] px-6 sm:px-10 py-8 sm:py-10 text-center">
@@ -51,7 +51,7 @@
                       transition-all duration-300 hover:-translate-y-1">
                 <div class="relative overflow-hidden">
                     @if($article->thumbnail)
-                    <img src="{{ Storage::url($article->thumbnail) }}" class="w-full h-36 sm:h-44 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="{{ Storage::url($article->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-36 sm:h-44 object-cover transition-transform duration-500 group-hover:scale-110">
                     @else
                     <div class="w-full h-36 sm:h-44 bg-neu-alt"></div>
                     @endif

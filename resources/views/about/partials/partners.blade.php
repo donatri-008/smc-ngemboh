@@ -24,7 +24,7 @@
                     'flex-shrink-0 snap-start sm:flex-shrink' => $scrollableMitra,
                 ])>
                 <div class="bg-white shadow-neu-in rounded-full p-3 w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
-                    <img src="{{ Storage::url($partner->logo) }}" class="max-w-full max-h-full object-contain">
+                    <img src="{{ Storage::url($partner->logo) }}" alt="{{ $partner->nama }}" class="max-w-full max-h-full object-contain">
                 </div>
                 <p class="text-xs sm:text-sm font-bold text-gray-700 text-center leading-snug transition-colors duration-300 group-hover:text-brand-green">{{ $partner->nama }}</p>
             </div>

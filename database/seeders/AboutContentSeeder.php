@@ -13,7 +13,7 @@ class AboutContentSeeder extends Seeder
             ['section' => 'lambang'],
             [
                 'content' => 'Lambang komunitas melambangkan sinergi antara akademisi dan masyarakat pesisir dalam mewujudkan pemberdayaan berkelanjutan.',
-                'image'   => 'assets/9-logo/long-econ.png',
+                'image'   => 'assets/9-logo/long-econ.webp',
             ]
         );
     }

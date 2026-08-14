@@ -16,7 +16,7 @@ class SambutanSeeder extends Seeder
             [
                 'nama' => 'Ibu Ana Mukhlisah S.Pd.',
                 'jabatan' => 'Kepala Desa Ngemboh',
-                'foto' => 'assets/sambutan/Ana Mukhlisah S.Pd (Kepala Desa Ngemboh).JPG',
+                'foto' => 'assets/sambutan/Ana Mukhlisah S.Pd (Kepala Desa Ngemboh).webp',
                 'isi_sambutan' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh.
 
 Puji syukur ke hadirat Allah SWT atas rahmat dan karunia-Nya. Atas nama Pemerintah Desa Ngemboh, kami menyampaikan apresiasi setinggi-tingginya serta selamat datang kepada Tim PPK Ormawa DPM FIP Universitas Negeri Surabaya atas dedikasi dan pengabdian yang direalisasikan di desa kami.
@@ -30,7 +30,7 @@ Wassalamu’alaikum Warahmatullahi Wabarakatuh.',
             [
                 'nama' => 'Bpk. Aditya Chandra Setiawan, S.Pd., M.Pd.',
                 'jabatan' => 'Dosen Pendamping PPK ORMAWA',
-                'foto' => 'assets/sambutan/Aditya Chandra Setiawan, S.Pd., M.Pd. (Dosen Pendamping PPK ORMAWA).jpg',
+                'foto' => 'assets/sambutan/Aditya Chandra Setiawan, S.Pd., M.Pd. (Dosen Pendamping PPK ORMAWA).webp',
                 'isi_sambutan' => 'Selamat datang di Smart Maritime Community Ngemboh. Melalui wadah ini, kita berupaya menyinergikan kearifan lokal masyarakat pesisir dengan teknologi modern sebagai langkah menuju desa maritim yang lebih maju.
 
 Tujuan kami bukan hanya meningkatkan kesejahteraan masyarakat, tetapi juga menjaga kelestarian ekosistem laut agar tetap lestari bagi generasi mendatang. Melalui kolaborasi, inovasi, dan semangat gotong royong, kami berharap Smart Maritime Community dapat menjadi ruang belajar, berkembang, dan berdaya bersama.
@@ -46,7 +46,7 @@ Wassalamu’alaikum Warahmatullahi Wabarakatuh.',
             [
                 'nama' => 'Bpk. Widya Nusantara, S.Pd., M.Pd.',
                 'jabatan' => 'Dosen Pembina DPM FIP',
-                'foto' => 'assets/sambutan/Widya Nusantara, S.Pd., M.Pd (Dosen Pembina DPM FIP).jpg',
+                'foto' => 'assets/sambutan/Widya Nusantara, S.Pd., M.Pd (Dosen Pembina DPM FIP).webp',
                 'isi_sambutan' => 'Puji syukur ke hadirat Tuhan Yang Maha Esa. Website ini hadir sebagai media informasi dan dokumentasi perjalanan program Long-Econ (Longline Economy Empowerment), sebuah inisiatif pemberdayaan masyarakat pesisir di Desa Ngemboh, Kabupaten Gresik.
 
 Melalui pendekatan kolaboratif, program ini mengintegrasikan inovasi teknologi, penguatan kapasitas, hingga transformasi menuju Smart Maritime Community.
@@ -65,7 +65,7 @@ PPK Ormawa – Mahasiswa Berdampak, Berkarya untuk Masyarakat.',
             [
                 'nama' => 'Bpk. Prof. Dr. Mochamad Nursalim, M.Si.',
                 'jabatan' => 'Dekan FIP UNESA',
-                'foto' => 'assets/sambutan/Prof. Dr. Mochamad Nursalim, M.Si (Dekan FIP UNESA).jpg',
+                'foto' => 'assets/sambutan/Prof. Dr. Mochamad Nursalim, M.Si (Dekan FIP UNESA).webp',
                 'isi_sambutan' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh.
 
 Puji syukur kita panjatkan ke hadirat Allah SWT atas segala rahmat dan karunia-Nya. Kehadiran website Smart Maritime Community Ngemboh ini merupakan wujud komitmen kami dalam mendokumentasikan, menyebarluaskan praktik baik, inovasi, serta memperkenalkan potensi Desa Ngemboh kepada masyarakat yang lebih luas.
@@ -83,7 +83,7 @@ Wassalamu’alaikum Warahmatullahi Wabarakatuh.',
             [
                 'nama' => 'Firyal Amelia Mufidah',
                 'jabatan' => 'Ketua Pelaksana',
-                'foto' => 'assets/sambutan/Firyal Amelia Mufidah.jpg',
+                'foto' => 'assets/sambutan/Firyal Amelia Mufidah.webp',
                 'isi_sambutan' => 'Assalamu’alaikum Warahmatullahi Wabarakatuh.
 
 Puji syukur ke hadirat Allah SWT atas segala rahmat dan karunia-Nya sehingga Program Penguatan Kapasitas Organisasi Kemahasiswaan (PPK Ormawa) DPM FIP Universitas Negeri Surabaya dapat terlaksana dengan baik.

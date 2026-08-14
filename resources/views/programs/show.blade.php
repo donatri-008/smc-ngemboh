@@ -60,7 +60,7 @@
 
             {{-- Back Button --}}
             <div class="w-full pt-5 sm:pt-8 border-t border-[#F1F5F9]">
-                <a href="{{ $backUrl }}"
+                <a href="{{ $backUrl }}" aria-label="{{ $backLabel }}"
                    class="group inline-flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full border border-[#E2E8F0] shadow-[0px_1px_2px_rgba(0,0,0,0.05)]
                           transition-all duration-300 ease-out
                           hover:bg-[#4CC71C] hover:border-[#4CC71C] hover:shadow-[0px_4px_12px_-2px_rgba(76,199,28,0.4)] hover:-translate-x-1

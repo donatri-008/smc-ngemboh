@@ -31,6 +31,7 @@
         <a href="{{ $buildHref($item['key'], $contents[$item['key']]) }}"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="{{ $item['label'] }}"
             class="bg-white rounded-2xl p-4 sm:p-5 flex items-start gap-3 sm:gap-4 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.15)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_24px_-2px_rgba(0,0,0,0.2)] cursor-pointer">
             <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
                 <x-dynamic-component :component="'heroicon-o-' . $item['icon']" class="w-5 h-5 sm:w-6 sm:h-6 text-brand-blue" />

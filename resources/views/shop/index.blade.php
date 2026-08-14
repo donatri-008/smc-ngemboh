@@ -15,7 +15,7 @@
      style="box-shadow: 6px 6px 12px #BABECC;">
 
     {{-- Image --}}
-    <a href="{{ route('shop.show', $product) }}" class="block relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3] bg-white">
+    <a href="{{ route('shop.show', $product) }}" aria-label="Lihat produk {{ $product->nama }}" class="block relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3] bg-white">
         @if($product->gambar)
         <img src="{{ Storage::url($product->gambar) }}"
              alt="{{ $product->nama }}"
@@ -86,7 +86,7 @@
                 "
                 action="{{ route('cart.add', $product) }}" method="POST" class="shrink-0">
                 @csrf
-                <button type="submit" :disabled="loading"
+                <button type="submit" :disabled="loading" aria-label="loading"
                         class="w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-full bg-[#4CC71C] flex items-center justify-center hover:bg-[#3DA617] transition disabled:opacity-60"
                         style="box-shadow: -6px -6px 12px #FFFFFF, 6px 6px 12px #BABECC;">
                     <x-heroicon-o-plus class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" x-show="!loading" />

@@ -36,13 +36,13 @@
 
                     {{-- Panah kiri/kanan cuma muncul kalau foto lebih dari 1 --}}
                     <template x-if="images.length > 1">
-                        <button type="button" @click="prev()"
+                        <button type="button" @click="prev()" aria-label="previous image"
                                 class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center hover:bg-white transition">
                             <x-heroicon-o-chevron-left class="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                         </button>
                     </template>
                     <template x-if="images.length > 1">
-                        <button type="button" @click="next()"
+                        <button type="button" @click="next()" aria-label="next image"
                                 class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center hover:bg-white transition">
                             <x-heroicon-o-chevron-right class="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                         </button>
@@ -53,7 +53,7 @@
                 <template x-if="images.length > 1">
                     <div class="grid grid-cols-4 gap-2 sm:gap-3">
                         <template x-for="(img, index) in images" :key="index">
-                            <button type="button" @click="current = index"
+                            <button type="button" @click="current = index" aria-label="thumbnail"
                                     class="bg-white rounded-lg sm:rounded-xl p-1 shadow-sm ring-2 transition"
                                     :class="current === index ? 'ring-[#4CC71C]' : 'ring-transparent'">
                                 <img :src="img" class="w-full h-14 sm:h-20 object-cover rounded-lg">
@@ -113,19 +113,19 @@
                     <div class="flex flex-wrap items-center gap-3 sm:gap-6">
                         <span class="font-semibold text-base sm:text-lg text-gray-900">Jumlah</span>
                         <div class="flex items-center gap-3 sm:gap-4">
-                            <button type="button" @click="qty = Math.max(1, qty - 1)"
+                            <button type="button" @click="qty = Math.max(1, qty - 1)" aria-label="decrease quantity"
                                     class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
                                 <span class="text-lg leading-none">−</span>
                             </button>
                             <span class="w-8 text-center text-base sm:text-lg font-semibold text-gray-900" x-text="qty"></span>
-                            <button type="button" @click="qty = Math.min(stok, qty + 1)"
+                            <button type="button" @click="qty = Math.min(stok, qty + 1)" aria-label="increase quantity"
                                     class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
                                 <x-heroicon-o-plus class="w-3.5 h-3.5" />
                             </button>
                         </div>
                     </div>
                     <input type="hidden" name="qty" x-bind:value="qty">
-                    <button type="submit" :disabled="loading"
+                    <button type="submit" :disabled="loading" aria-label="loading"
                             class="w-full flex items-center justify-center gap-3 bg-[#4CC71C] hover:bg-[#3DA617] transition rounded-2xl sm:rounded-3xl py-3.5 sm:py-4 text-white font-semibold text-base sm:text-lg shadow-md disabled:opacity-60">
                         <x-heroicon-o-shopping-cart class="w-5 h-5" x-show="!loading" />
                         <svg x-show="loading" x-cloak class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">

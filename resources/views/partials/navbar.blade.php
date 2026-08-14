@@ -1,6 +1,6 @@
 <nav x-data="{ mobileOpen: false, berandaOpen: false, aboutOpen: false }" class="bg-neu px-6 md:px-12 py-3 flex items-center justify-between sticky top-0 z-40">
     <a href="{{ route('home') }}" class="flex items-center shrink-0">
-        <img src="{{ asset('assets/logo/utama/Logo SMC.png') }}" alt="Smart Maritim Community Ngemboh" class="h-10 w-10 md:h-12 md:w-12 object-contain">
+        <img src="{{ asset('assets/logo/utama/Logo SMC.webp') }}" alt="Smart Maritim Community Ngemboh" class="h-10 w-10 md:h-12 md:w-12 object-contain">
     </a>
 
     {{-- Menu desktop --}}
@@ -74,7 +74,7 @@
 
     {{-- Kanan: cart + hamburger (mobile) --}}
     <div class="flex items-center gap-3">
-        <a href="{{ route('cart.index') }}"
+        <a href="{{ route('cart.index') }}" aria-label="Lihat keranjang belanja"
             x-data="{ count: {{ (int) ($cartCount ?? 0) }} }"
             x-on:cart-updated.window="count = $event.detail.count"
             class="relative w-9 h-9 rounded-full bg-brand-green flex items-center justify-center shrink-0 transition-transform duration-150 hover:scale-105 active:scale-95">

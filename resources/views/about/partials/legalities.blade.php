@@ -54,9 +54,9 @@
             <h3 class="text-lg sm:text-2xl font-bold text-brand-blue mb-1" x-text="title"></h3>
             <p class="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6" x-show="kategori" x-text="kategori"></p>
 
-            <img :src="image" class="w-full max-h-[300px] sm:max-h-[420px] object-contain rounded-2xl mx-auto">
+            <img :src="image" alt="Dokumen" class="w-full max-h-[300px] sm:max-h-[420px] object-contain rounded-2xl mx-auto">
 
-            <button type="button" @click="open = false"
+            <button type="button" @click="open = false" aria-label="tutup"
                     class="mt-6 text-xs sm:text-sm text-gray-400 hover:text-gray-600">
                 Tutup
             </button>

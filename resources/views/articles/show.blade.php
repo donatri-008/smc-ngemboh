@@ -67,7 +67,7 @@
 
         {{-- Back button --}}
         <div class="pt-8 sm:pt-10 mt-8 sm:mt-10 border-t border-[#F1F5F9]">
-            <a href="{{ route('articles.index') }}"
+            <a href="{{ route('articles.index') }}" aria-label="Kembali ke Artikel & Berita"
                class="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full border border-[#E2E8F0] bg-white text-brand-green font-semibold text-xs sm:text-sm
                       shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:bg-brand-green hover:text-white hover:border-brand-green">
                 <x-heroicon-o-arrow-left class="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
@@ -87,7 +87,7 @@
                       shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)] transition-all duration-300 hover:-translate-y-1">
                 <div class="relative overflow-hidden">
                     @if($item->thumbnail)
-                    <img src="{{ Storage::url($item->thumbnail) }}" class="w-full h-48 sm:h-52 lg:h-56 object-cover transition-transform duration-500 group-hover:scale-110">
+                    <img src="{{ Storage::url($item->thumbnail) }}" alt="{{ $article->title }}" class="w-full h-48 sm:h-52 lg:h-56 object-cover transition-transform duration-500 group-hover:scale-110">
                     @else
                     <div class="w-full h-48 sm:h-52 lg:h-56 bg-[#F1F5F9]"></div>
                     @endif

@@ -37,7 +37,6 @@
         {{-- Search --}}
         <form action="{{ route('articles.index') }}" method="GET" class="relative w-full md:w-96" x-data>
             <input type="hidden" name="category" value="{{ request('category') }}">
-            {{-- per_page ikut disertakan biar filter/pencarian tidak me-reset ukuran halaman --}}
             <input type="hidden" name="per_page" value="{{ request('per_page') }}">
             <x-heroicon-o-magnifying-glass class="w-5 h-5 text-brand-green absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari artikel atau berita..."
@@ -47,11 +46,6 @@
     </div>
 
     {{-- Grid Artikel --}}
-    {{--
-        Jumlah item per halaman ditentukan lewat query string "per_page" yang
-        di-sync otomatis oleh script di bawah berdasarkan lebar layar
-        (window.innerWidth), lalu divalidasi & dipakai di ArticleController@index.
-    --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mb-12">
         @forelse($articles as $article)
         <a href="{{ route('articles.show', $article) }}"
@@ -60,7 +54,7 @@
 
             <div class="relative overflow-hidden">
                 @if($article->thumbnail)
-                <img src="{{ Storage::url($article->thumbnail) }}"
+                <img src="{{ Storage::url($article->thumbnail) }}" alt="{{ $article->title }}"
                     class="w-full h-48 sm:h-52 lg:h-56 object-cover transition-transform duration-500 group-hover:scale-110">
                 @else
                 <div class="w-full h-48 sm:h-52 lg:h-56 bg-neu-alt"></div>

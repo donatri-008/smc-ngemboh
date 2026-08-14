@@ -184,7 +184,7 @@
                                 <p class="text-xs sm:text-sm md:text-base font-bold text-[#2655B6]" x-text="formatRp(item.harga)"></p>
                             </div>
 
-                            <button type="button" @click="confirmRemoveId = item.id"
+                            <button type="button" @click="confirmRemoveId = item.id" aria-label="remove item"
                                     class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-[#BA1A1A] hover:bg-red-50 transition shrink-0 sm:order-last">
                                 <x-heroicon-o-trash class="w-4 h-4" />
                             </button>
@@ -192,12 +192,12 @@
 
                         <div class="flex flex-wrap items-center justify-between gap-2 sm:contents">
                             <div class="flex items-center gap-2 p-1 bg-[#F6F9FF] rounded-full shadow-[inset_-6px_-6px_12px_#FFFFFF,inset_6px_6px_12px_#BABECC] shrink-0">
-                                <button type="button" @click="changeQty(item, -1)"
+                                <button type="button" @click="changeQty(item, -1)" aria-label="decrease quantity"
                                         class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
                                     <span class="block w-3.5 h-0.5 bg-white"></span>
                                 </button>
                                 <span class="w-7 sm:w-8 text-center text-sm sm:text-base font-bold text-[#171C21]" x-text="item.qty"></span>
-                                <button type="button" @click="changeQty(item, 1)"
+                                <button type="button" @click="changeQty(item, 1)" aria-label="increase quantity"
                                         class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] flex items-center justify-center text-white">
                                     <x-heroicon-o-plus class="w-3.5 h-3.5" />
                                 </button>
@@ -229,7 +229,7 @@
                         <span class="text-xl sm:text-2xl md:text-[32px] font-bold text-[#2655B6]" x-text="formatRp(total)"></span>
                     </div>
 
-                    <button type="button" @click="showCheckout = true"
+                    <button type="button" @click="showCheckout = true" aria-label="checkout"
                             class="w-full flex items-center justify-center gap-2 sm:gap-3 bg-[#4CC71C] rounded-xl py-3 sm:py-3.5 md:py-4 text-white font-bold text-sm sm:text-base md:text-lg shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] hover:bg-[#3DA617] transition">
                         <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 sm:w-5 sm:h-5" />
                         Checkout via WhatsApp
@@ -242,7 +242,7 @@
             </div>
 
             {{-- FIX: full-width di bawah pada layar lg, tidak lagi sejajar kolom ringkasan --}}
-            <a href="{{ route('shop.index') }}"
+            <a href="{{ route('shop.index') }}" aria-label="kembali ke katalog belanja"
                class="w-fit inline-flex items-center gap-2 sm:gap-3 bg-[#4CC71C] rounded-full px-5 sm:px-8 py-2.5 sm:py-3 text-white font-semibold text-xs sm:text-sm md:text-base shadow-[0px_1px_2px_rgba(0,0,0,0.05)] hover:bg-[#3DA617] transition lg:col-span-2">
                 <x-heroicon-o-arrow-left class="w-4 h-4 sm:w-5 sm:h-5" />
                 Kembali ke Katalog Belanja
@@ -262,7 +262,7 @@
             {{-- Header --}}
             <div class="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 shrink-0 border-b border-[#BFC8CB]/20">
                 <h2 class="text-lg sm:text-2xl font-bold text-[#2655B6]">Ringkasan Pesanan</h2>
-                <button type="button" @click="showCheckout = false" class="text-gray-400 hover:text-gray-600">
+                <button type="button" @click="showCheckout = false" aria-label="tutup" class="text-gray-400 hover:text-gray-600">
                     <x-heroicon-o-x-mark class="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
             </div>
@@ -273,14 +273,14 @@
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wide text-[#40484B] mb-2">Nama Pemesan</label>
                         <input type="text" name="nama" x-model="nama" required
-                               class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
+                            class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
                         @error('nama') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wide text-[#40484B] mb-2">Alamat Pemesan</label>
                         <input type="text" name="alamat" x-model="alamat" required
-                               class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
+                            class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base text-[#161D16] outline-none">
                         @error('alamat') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
 
@@ -313,13 +313,13 @@
                         <span class="text-lg sm:text-2xl font-bold text-[#2655B6]" x-text="formatRp(total)"></span>
                     </div>
 
-                    <button type="submit"
+                    <button type="submit" aria-label="konfirmasi & lanjut ke whatsapp"
                             class="w-full flex items-center justify-center gap-2 sm:gap-3 bg-[#4CC71C] shadow-[-6px_-6px_12px_#FFFFFF,6px_6px_12px_#BABECC] rounded-2xl py-3 text-white font-bold text-xs sm:text-sm md:text-base hover:bg-[#3DA617] transition">
                         <x-heroicon-o-chat-bubble-left-right class="w-4 h-4 sm:w-5 sm:h-5" />
                         Konfirmasi & Lanjut ke WhatsApp
                     </button>
 
-                    <button type="button" @click="showCheckout = false"
+                    <button type="button" @click="showCheckout = false" aria-label="batal"
                             class="w-full py-1 text-xs sm:text-sm font-medium text-[#40484B] hover:underline">
                         Batal
                     </button>
@@ -348,12 +348,12 @@
             </p>
 
             <div class="flex items-center gap-3 sm:gap-4 w-full mt-5 sm:mt-8">
-                <button type="button" @click="confirmRemoveId = null"
+                <button type="button" @click="confirmRemoveId = null" aria-label="batal"
                         class="flex-1 flex items-center justify-center py-2.5 sm:py-3 bg-[#F6F9FF] shadow-[-4px_-4px_10px_#FFFFFF,4px_4px_10px_#BABECC] rounded-lg text-xs sm:text-sm font-semibold text-[#4CC71C] transition active:scale-95">
                     Batal
                 </button>
                 <button type="button"
-                        @click="removeItem(confirmRemoveId); confirmRemoveId = null"
+                        @click="removeItem(confirmRemoveId); confirmRemoveId = null" aria-label="hapus"
                         class="flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 bg-[#FF383C] shadow-[-4px_-4px_10px_rgba(255,255,255,0.2),4px_4px_10px_rgba(0,0,0,0.2)] rounded-lg text-xs sm:text-sm font-semibold text-white transition active:scale-95">
                     <x-heroicon-o-trash class="w-4 h-4" />
                     Hapus

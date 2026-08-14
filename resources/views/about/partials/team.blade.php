@@ -9,7 +9,7 @@
     <div class="flex justify-center px-1">
         <div class="bg-neu shadow-neu-in rounded-full mb-5 sm:mb-6 p-1.5 sm:p-2 flex flex-wrap sm:flex-nowrap justify-center items-center gap-1.5 sm:gap-2 max-w-full sm:overflow-x-auto">
             @foreach($groups as $key => $label)
-            <button type="button" @click="tab = '{{ $key }}'"
+            <button type="button" @click="tab = '{{ $key }}'" aria-label="{{ $label }}"
                 :class="tab === '{{ $key }}'
                     ? 'bg-neu shadow-neu-out text-brand-green'
                     : 'shadow-neu-in text-brand-green hover:bg-brand-green hover:text-white'"
