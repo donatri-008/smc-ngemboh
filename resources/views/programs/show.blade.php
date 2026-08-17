@@ -39,7 +39,7 @@
             {{-- Gambar Utama --}}
             @if($program->gambar)
             <div class="w-full h-[200px] sm:h-[280px] md:h-[340px] lg:h-[400px] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)]">
-                <img src="{{ asset($program->gambar) }}" alt="{{ $program->nama }}" class="w-full h-full object-cover">
+                <img src="{{ asset($program->gambar) }}" alt="{{ $program->nama }}" class="w-full h-auto object-cover">
             </div>
             @else
             <div class="w-full h-[180px] sm:h-[240px] md:h-[300px] lg:h-[340px] rounded-xl sm:rounded-2xl bg-gray-100 shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.1),0px_2px_4px_-2px_rgba(0,0,0,0.1)] flex items-center justify-center">
