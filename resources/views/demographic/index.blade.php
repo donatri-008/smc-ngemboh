@@ -140,6 +140,7 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 new Chart(document.getElementById('chart-anggota-smc'), {
     type: 'doughnut',

@@ -3,8 +3,11 @@
 
 @section('content')
 
-<section class="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 bg-cover bg-center"
-         style="background-image: url('{{ asset('assets/bg-beranda.webp') }}')">
+<section class="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-center justify-center px-4 sm:px-6 py-12 sm:py-16 overflow-hidden">
+    <img src="{{ asset('assets/bg-beranda.webp') }}"
+         alt="bg-laut"
+         fetchpriority="high"
+         class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-black/10"></div>
 
     <div class="relative z-10 max-w-4xl w-full bg-white/15 backdrop-blur border border-white/40 shadow-xl rounded-3xl sm:rounded-[50px] px-6 sm:px-10 py-8 sm:py-10 text-center">

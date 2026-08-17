@@ -1,3 +1,9 @@
+@php
+    $metaTitle = $article->title . ' - Smart Maritim Community Ngemboh';
+    $metaDescription = Str::limit(strip_tags($article->content), 155);
+    $metaImage = $article->thumbnail ? Storage::url($article->thumbnail) : null;
+    $metaType = 'article';
+@endphp
 @extends('layouts.app')
 @section('title', $article->title . ' - Smart Maritim Community Ngemboh')
 
