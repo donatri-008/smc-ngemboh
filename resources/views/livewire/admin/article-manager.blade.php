@@ -228,8 +228,28 @@
                     </div>
                     <div>
                         <label class="text-[13px] font-semibold tracking-wide text-[#40484B]">Tanggal Terbit</label>
-                        <input wire:model="published_at" type="date"
-                               class="w-full mt-2 bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl px-5 sm:px-6 py-3.5 sm:py-4 text-sm text-[#181C23] outline-none">
+                        <div class="relative mt-2"
+                            x-data="{
+                                picker: null,
+                                value: @entangle('published_at').live
+                            }"
+                            x-init="
+                                picker = flatpickr($refs.dateInput, {
+                                    dateFormat: 'Y-m-d',
+                                    altInput: true,
+                                    altFormat: 'd F Y',
+                                    defaultDate: value || null,
+                                    onChange: (selectedDates, dateStr) => { value = dateStr; }
+                                });
+                                $watch('value', (val) => picker.setDate(val || null, false));
+                            ">
+                            <x-heroicon-o-calendar-days class="w-[18px] h-[18px] text-[#94A3B8] absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+                            <input
+                                x-ref="dateInput"
+                                type="text"
+                                placeholder="Pilih tanggal"
+                                class="w-full bg-[#F6F9FF] shadow-[inset_4px_4px_8px_#BABECC,inset_-4px_-4px_8px_#FFFFFF] rounded-2xl pl-12 pr-5 sm:pr-6 py-3.5 sm:py-4 text-sm text-[#181C23] placeholder:text-[#BFC8CB] outline-none">
+                        </div>
                     </div>
                 </div>
 
